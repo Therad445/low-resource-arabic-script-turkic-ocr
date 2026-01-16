@@ -1,0 +1,5 @@
+{
+  "cer_mean": 0.1234,
+  "wer_mean": 0.4567,
+  "samples": 200
+}

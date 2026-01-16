@@ -1,0 +1,4 @@
+tool: kraken
+notes: baseline using default model
+data:
+  gold_test: datasets/gold_test_v1/labels/gt.tsv
