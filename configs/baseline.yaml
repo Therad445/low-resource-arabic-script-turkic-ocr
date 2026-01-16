@@ -1,0 +1,10 @@
+project:
+  name: arabic-script-turkic-ocr
+  run_name: baseline
+
+data:
+  gt_path: datasets/gold_test_v1/labels/gt.tsv
+  pred_path: ""  # fill when available
+
+eval:
+  metrics: [cer, wer]

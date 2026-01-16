@@ -1,0 +1,11 @@
+project:
+  name: arabic-script-turkic-ocr
+  run_name: eval
+
+data:
+  gt_path: datasets/gold_test_v1/labels/gt.tsv
+  pred_path: experiments/sample_run/predictions.tsv
+
+eval:
+  metrics: [cer, wer]
+  save_error_report: true
