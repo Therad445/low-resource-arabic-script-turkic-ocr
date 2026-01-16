@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it."
+title: "Low-resource Arabic-script Turkic OCR"
+type: software
+authors:
+  - family-names: Islamov
+    given-names: Radmir
+repository-code: "https://github.com/Therad445/low-resource-arabic-script-turkic-ocr"
+license: MIT
+keywords:
+  - OCR
+  - HTR
+  - low-resource
+  - arabic script
+  - turkic
+  - digital humanities
