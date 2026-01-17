@@ -5,6 +5,7 @@ from pathlib import Path
 from statistics import mean
 from datetime import datetime
 
+from scripts._bootstrap import ROOT  # noqa: F401
 from src.data.io import read_tsv_rows, align_gt_pred
 from src.metrics.cer import cer
 from src.metrics.wer import wer

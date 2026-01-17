@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from statistics import mean
 
+from scripts._bootstrap import ROOT  # noqa: F401
 from src.data.io import read_tsv_rows, align_gt_pred
 from src.metrics.cer import cer
 from src.metrics.wer import wer

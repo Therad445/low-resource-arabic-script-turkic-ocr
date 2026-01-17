@@ -4,6 +4,7 @@ import argparse
 import unicodedata
 from collections import Counter, defaultdict
 
+from scripts._bootstrap import ROOT  # noqa: F401
 from src.data.io import read_tsv_rows
 
 INVISIBLE = {
