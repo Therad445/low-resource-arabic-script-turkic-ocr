@@ -1,0 +1,5 @@
+﻿tool: toy
+notes: sanity check for pipeline (no real OCR)
+data:
+  gt: datasets/gold_test_v1/labels/gt.tsv
+  pred: experiments/2026-01-17_toy_sanity/predictions.tsv
