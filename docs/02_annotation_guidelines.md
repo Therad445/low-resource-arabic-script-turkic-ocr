@@ -2,6 +2,26 @@
 
 Goal: produce consistent line-level transcriptions for OCR/HTR training and evaluation.
 
+## Text normalization policy (v1) — FIXED
+
+Goal: make CER/WER comparable across experiments.
+
+1) Unicode normalization: NFC.
+2) Whitespace:
+   - Replace any sequence of whitespace with a single ASCII space.
+   - Trim leading/trailing spaces.
+3) Remove invisible formatting marks if present:
+   - U+200C (ZWNJ), U+200D (ZWJ), U+200E (LRM), U+200F (RLM),
+     U+202A..U+202E (embedding/override marks), U+2066..U+2069 (isolate marks).
+4) Diacritics/harakat (Phase A / printed):
+   - Do NOT add diacritics if absent.
+   - If diacritics are inconsistently printed, omit them in transcription (v1).
+5) Unknown/unclear character:
+   - Use the replacement character `�` for a single unknown glyph.
+6) No modernization:
+   - Preserve original spelling/orthography; do not convert to modern Tatar/Bashkir.
+
+
 ## Unit of annotation
 - Prefer **line-level** transcription aligned with a line crop image.
 
@@ -15,8 +35,8 @@ Goal: produce consistent line-level transcriptions for OCR/HTR training and eval
 - If punctuation is unclear, omit rather than hallucinate.
 
 ## Diacritics / dots
-- If diacritics are clearly printed, keep them.
-- If diacritics are absent in the source, do not add.
+- Dots that differentiate letters are part of the letter and must be kept.
+- Optional vocalization diacritics (harakat) are omitted in v1 if not consistently printed.
 
 ## Numbers
 - Preserve numbers as printed.

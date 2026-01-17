@@ -1,3 +1,3 @@
-# image_path<TAB>transcription
+# image_id<TAB>image_path<TAB>transcription
 # example:
-# images/sample_0001.png	<arabic-script-transcription-here>
+# srcA_page001_line0001	images/srcA/page001/line0001.png	<arabic-script-transcription-here>
