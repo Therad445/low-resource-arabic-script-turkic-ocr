@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Type-check (mypy)
+        run: |
+          mypy src scripts || true
+
+      - name: Unit tests
+        run: |
+          pytest -q
+
+      - name: Validate GT protocol
+        run: |
+          python -m scripts.validate_gt --gt datasets/gold_test_v1/labels/gt.tsv
+
+      - name: Toy sanity eval (artifact)
+        run: |
+          mkdir -p _ci_artifacts/toy
+          python -m scripts.run_eval \
+            --gt datasets/gold_test_v1/labels/gt.tsv \
+            --pred experiments/2026-01-17_toy_sanity/predictions.tsv \
+            --exp_dir _ci_artifacts/toy \
+            --tag ci-toy
+
+      - name: Upload toy metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: toy-metrics
+          path: _ci_artifacts/toy/metrics.json
