@@ -1,3 +1,8 @@
 # image_id<TAB>image_path<TAB>transcription
 # example:
 # srcA_page001_line0001	images/srcA/page001/line0001.png	<arabic-script-transcription-here>
+toy_0001	images/toy/toy_0001.png	السلام عليكم
+toy_0002	images/toy/toy_0002.png	مرحبا
+toy_0003	images/toy/toy_0003.png	كتاب
+toy_0004	images/toy/toy_0004.png	مدرسة
+toy_0005	images/toy/toy_0005.png	لغة
