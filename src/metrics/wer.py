@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from .cer import _levenshtein
 
 def wer(ref: str, hyp: str) -> float:
     """
@@ -16,6 +15,7 @@ def wer(ref: str, hyp: str) -> float:
     # Simpler: join with a non-space separator and compute on tokens by replacing each word with a char is hard.
     # We'll do direct DP on lists below.
     return _levenshtein_list(ref_words, hyp_words) / float(len(ref_words))
+
 
 def _levenshtein_list(a: list[str], b: list[str]) -> int:
     if a == b:

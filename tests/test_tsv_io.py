@@ -1,14 +1,12 @@
 from pathlib import Path
 
-from src.data.io import read_tsv_rows, align_gt_pred
+from src.data.io import align_gt_pred, read_tsv_rows
 
 
 def test_read_tsv_rows_3col(tmp_path: Path):
     p = tmp_path / "gt.tsv"
     p.write_text(
-        "# image_id\timage_path\ttranscription\n"
-        "a\timg/a.png\tfoo\n"
-        "b\timg/b.png\tbar\n",
+        "# image_id\timage_path\ttranscription\na\timg/a.png\tfoo\nb\timg/b.png\tbar\n",
         encoding="utf-8",
     )
     rows = read_tsv_rows(p)

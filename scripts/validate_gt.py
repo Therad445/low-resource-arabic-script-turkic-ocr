@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import unicodedata
-from collections import Counter, defaultdict
+from collections import Counter
 
 from scripts._bootstrap import ROOT  # noqa: F401
 from src.data.io import read_tsv_rows
@@ -12,8 +12,15 @@ INVISIBLE = {
     "\u200d",  # ZWJ
     "\u200e",  # LRM
     "\u200f",  # RLM
-    "\u202a", "\u202b", "\u202c", "\u202d", "\u202e",  # embeddings/overrides
-    "\u2066", "\u2067", "\u2068", "\u2069",  # isolates
+    "\u202a",
+    "\u202b",
+    "\u202c",
+    "\u202d",
+    "\u202e",  # embeddings/overrides
+    "\u2066",
+    "\u2067",
+    "\u2068",
+    "\u2069",  # isolates
 }
 
 
@@ -78,7 +85,9 @@ def main() -> None:
             print(f"  U+{ord(ch):04X} {repr(ch)}: {cnt}")
 
     if changed_norm:
-        print(f"[INFO] Text differs from Normalization v1 in {len(changed_norm)} rows (showing up to {args.show_examples})")
+        print(
+            f"[INFO] Text differs from Normalization v1 in {len(changed_norm)} rows (showing up to {args.show_examples})"
+        )
         for image_id, raw, normed in changed_norm[: args.show_examples]:
             print("---", image_id)
             print("RAW:  ", raw)

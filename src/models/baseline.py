@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 # Placeholder for future OCR model wrapper
 class BaselineModel:
     def __init__(self) -> None:

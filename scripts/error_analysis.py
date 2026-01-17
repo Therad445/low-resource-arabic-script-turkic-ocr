@@ -5,7 +5,7 @@ from collections import Counter
 from pathlib import Path
 
 from scripts._bootstrap import ROOT  # noqa: F401
-from src.data.io import read_tsv_rows, align_gt_pred
+from src.data.io import align_gt_pred, read_tsv_rows
 from src.metrics.cer import cer
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 def _levenshtein(a: str, b: str) -> int:
     # Classic DP edit distance
     if a == b:
@@ -19,6 +20,7 @@ def _levenshtein(a: str, b: str) -> int:
             cur.append(min(ins, dele, sub))
         prev = cur
     return prev[-1]
+
 
 def cer(ref: str, hyp: str) -> float:
     """
