@@ -1,4 +1,5 @@
 # Low-resource Arabic-script Turkic OCR
+![CI](https://github.com/Therad445/low-resource-arabic-script-turkic-ocr/actions/workflows/ci.yml/badge.svg)
 
 Reproducible OCR/HTR experiments for historical Turkic texts written in Arabic script
 (Tatar/Bashkir focus). This repository aims to provide a clean research workflow:
