@@ -1,0 +1,9 @@
+{
+  "tag": "toy",
+  "timestamp": "2026-01-17T04:44:05",
+  "samples": 5,
+  "cer_mean": 0.14666666666666667,
+  "wer_mean": 0.6,
+  "gt_path": "datasets/gold_test_v1/labels/gt.tsv",
+  "pred_path": "experiments/2026-01-17_toy_sanity/predictions.tsv"
+}
