@@ -1,36 +1,18 @@
 from __future__ import annotations
 
 import argparse
-import unicodedata
 from collections import Counter
+from pathlib import Path
 
-from scripts._bootstrap import ROOT  # noqa: F401
 from src.data.io import read_tsv_rows
+from src.data.normalization import INVISIBLE_FORMATTING_MARKS, normalize_text_v1
 
-INVISIBLE = {
-    "\u200c",  # ZWNJ
-    "\u200d",  # ZWJ
-    "\u200e",  # LRM
-    "\u200f",  # RLM
-    "\u202a",
-    "\u202b",
-    "\u202c",
-    "\u202d",
-    "\u202e",  # embeddings/overrides
-    "\u2066",
-    "\u2067",
-    "\u2068",
-    "\u2069",  # isolates
-}
+ALLOWED_IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".tif", ".tiff"}
 
 
-def normalize_v1(s: str) -> str:
-    s = unicodedata.normalize("NFC", s or "")
-    for ch in INVISIBLE:
-        s = s.replace(ch, "")
-    # collapse whitespace
-    s = " ".join(s.split())
-    return s.strip()
+def _looks_relative_path(value: str) -> bool:
+    path = Path(value)
+    return not path.is_absolute() and ".." not in path.parts
 
 
 def main() -> None:
@@ -44,54 +26,75 @@ def main() -> None:
         raise SystemExit("No rows found (check file format).")
 
     seen = set()
-    dup_ids = []
-    empty_text = []
-    changed_norm = []
+    dup_ids: list[str] = []
+    empty_text: list[str] = []
+    changed_norm: list[tuple[str, str, str]] = []
     invisible_hits = Counter()
+    suspicious_paths: list[str] = []
+    bad_suffixes: list[str] = []
 
-    for r in rows:
-        if r.image_id in seen:
-            dup_ids.append(r.image_id)
-        seen.add(r.image_id)
+    for row in rows:
+        if row.image_id in seen:
+            dup_ids.append(row.image_id)
+        seen.add(row.image_id)
 
-        if not r.text.strip():
-            empty_text.append(r.image_id)
+        if not row.text.strip():
+            empty_text.append(row.image_id)
 
-        # invisible marks check
-        for ch in INVISIBLE:
-            if ch in r.text:
-                invisible_hits[ch] += r.text.count(ch)
+        if not _looks_relative_path(row.image_path):
+            suspicious_paths.append(row.image_path)
+        elif Path(row.image_path).suffix.lower() not in ALLOWED_IMAGE_SUFFIXES:
+            bad_suffixes.append(row.image_path)
 
-        n = normalize_v1(r.text)
-        if n != r.text:
-            changed_norm.append((r.image_id, r.text, n))
+        for ch in INVISIBLE_FORMATTING_MARKS:
+            if ch in row.text:
+                invisible_hits[ch] += row.text.count(ch)
+
+        normalized = normalize_text_v1(row.text)
+        if normalized != row.text:
+            changed_norm.append((row.image_id, row.text, normalized))
 
     print(f"Rows: {len(rows)}")
     print(f"Unique IDs: {len(seen)}")
 
     if dup_ids:
         print(f"[WARN] Duplicate image_id: {len(dup_ids)} (showing up to {args.show_examples})")
-        for x in dup_ids[: args.show_examples]:
-            print("  ", x)
+        for value in dup_ids[: args.show_examples]:
+            print(" ", value)
 
     if empty_text:
         print(f"[WARN] Empty transcription: {len(empty_text)} (showing up to {args.show_examples})")
-        for x in empty_text[: args.show_examples]:
-            print("  ", x)
+        for value in empty_text[: args.show_examples]:
+            print(" ", value)
+
+    if suspicious_paths:
+        print(
+            f"[WARN] Suspicious image paths: {len(suspicious_paths)} (showing up to {args.show_examples})"
+        )
+        for value in suspicious_paths[: args.show_examples]:
+            print(" ", value)
+
+    if bad_suffixes:
+        print(
+            f"[WARN] Unusual image suffixes: {len(bad_suffixes)} (showing up to {args.show_examples})"
+        )
+        for value in bad_suffixes[: args.show_examples]:
+            print(" ", value)
 
     if invisible_hits:
         print("[WARN] Invisible formatting marks found:")
-        for ch, cnt in invisible_hits.most_common():
-            print(f"  U+{ord(ch):04X} {repr(ch)}: {cnt}")
+        for ch, count in invisible_hits.most_common():
+            print(f" U+{ord(ch):04X} {repr(ch)}: {count}")
 
     if changed_norm:
         print(
-            f"[INFO] Text differs from Normalization v1 in {len(changed_norm)} rows (showing up to {args.show_examples})"
+            f"[INFO] Text differs from normalization v1 in {len(changed_norm)} rows "
+            f"(showing up to {args.show_examples})"
         )
-        for image_id, raw, normed in changed_norm[: args.show_examples]:
+        for image_id, raw, normalized in changed_norm[: args.show_examples]:
             print("---", image_id)
-            print("RAW:  ", raw)
-            print("NORM: ", normed)
+            print("RAW: ", raw)
+            print("NORM:", normalized)
 
 
 if __name__ == "__main__":
