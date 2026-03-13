@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/low-resource-arabic-script-turkic-ocr/schemas/line_gt.schema.json",
+  "title": "Line-level OCR ground truth record",
+  "description": "Canonical line-level manifest record for historical Turkic OCR experiments.",
+  "type": "object",
+  "required": [
+    "line_id",
+    "doc_id",
+    "page_id",
+    "source_id",
+    "image_relpath",
+    "transcription_diplomatic"
+  ],
+  "properties": {
+    "line_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^\\s].*[^\\s]$|^[^\\s]$"
+    },
+    "doc_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "page_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image_relpath": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Relative local path to line image or page crop."
+    },
+    "transcription_diplomatic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "transcription_normalized": {
+      "type": "string"
+    },
+    "quality_flag": {
+      "type": "string",
+      "enum": ["", "ok", "needs_review", "illegible", "partial", "damaged"]
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
