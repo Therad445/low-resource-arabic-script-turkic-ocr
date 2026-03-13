@@ -1,0 +1,5 @@
+line_id	doc_id	page_id	source_id	image_relpath	transcription_diplomatic	quality_flag
+kazan_1905_p001_l0001	kazan_1905	kazan_1905_p001	archive_a	processed/lines/kazan_1905/p001/l0001.png	سلام عليكم	ok
+kazan_1905_p001_l0002	kazan_1905	kazan_1905_p001	archive_a	processed/lines/kazan_1905/p001/l0002.png	بسم الله	ok
+ufa_1908_p003_l0001	ufa_1908	ufa_1908_p003	archive_b	processed/lines/ufa_1908/p003/l0001.png	الحمد لله	needs_review
+ufa_1908_p003_l0002	ufa_1908	ufa_1908_p003	archive_b	processed/lines/ufa_1908/p003/l0002.png	رب العالمين	ok

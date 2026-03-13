@@ -28,13 +28,13 @@ def main() -> None:
     val_items = items[n_train : n_train + n_val]
     test_items = items[n_train + n_val :]
 
-    (out_dir / "train.txt").write_text(
+    (out_dir / "train_docs.txt").write_text(
         "\n".join(train_items) + ("\n" if train_items else ""), encoding="utf-8"
     )
-    (out_dir / "val.txt").write_text(
+    (out_dir / "dev_docs.txt").write_text(
         "\n".join(val_items) + ("\n" if val_items else ""), encoding="utf-8"
     )
-    (out_dir / "test.txt").write_text(
+    (out_dir / "test_docs.txt").write_text(
         "\n".join(test_items) + ("\n" if test_items else ""), encoding="utf-8"
     )
 
