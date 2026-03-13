@@ -1,3 +1,4 @@
-doc_id,source_id,title_short,year,language_note,script_note,print_or_handwritten,scan_quality_bucket,layout_complexity,rights_note,local_storage_note
-kazan_1905,archive_a,Sample Kazan Document,1905,Old Tatar,Arabic script,printed,good,simple,local research use only,stored locally
-ufa_1908,archive_b,Sample Ufa Document,1908,Old Tatar,Arabic script,printed,medium,simple,local research use only,stored locally
+doc_id,source_id,title_short,year,language_note,script_note,print_or_handwritten,scan_quality_bucket,layout_complexity,rights_note,local_storage_note,status
+kazan_1905,archive_a,Sample Kazan Document,1905,Old Tatar,Arabic script,printed,good,simple,local research use only,stored locally,pilot
+ufa_1908,archive_b,Sample Ufa Document,1908,Old Tatar,Arabic script,printed,medium,simple,local research use only,stored locally,pilot
+troitsk_1911,archive_c,Sample Troitsk Document,1911,Old Tatar,Arabic script,printed,good,simple,local research use only,stored locally,candidate

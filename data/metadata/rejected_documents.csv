@@ -1,0 +1,3 @@
+doc_id,reason,date,notes
+example_bad_scan,severe bleed-through,2026-03-13,usable for archive only not for pilot OCR
+example_complex_layout,multi-column layout,2026-03-13,save for later layout-aware phase
