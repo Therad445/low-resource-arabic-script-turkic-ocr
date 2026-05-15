@@ -50,3 +50,8 @@ experiments/**/artifacts/**
 !experiments/**/metrics.json
 !experiments/**/predictions.tsv
 !experiments/**/notes.md
+*.pyc
+_incoming/
+models/
+*.safetensors
+*.bin
