@@ -1,0 +1,4 @@
+split,clean_lines,noisy_clean_pairs,avg_clean_chars,avg_noisy_chars
+train,320,6400,113.94,113.51
+valid,40,800,112.75,112.24
+test,40,800,122.25,121.7

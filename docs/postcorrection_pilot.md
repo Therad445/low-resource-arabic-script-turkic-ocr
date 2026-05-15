@@ -1,62 +1,70 @@
-The dataset is located in:
+# Arabic-script Turkic OCR post-correction pilot
 
-```text
-data/postcorrection/processed/
-```
+## Goal
 
-## Methods
+This pilot evaluates OCR post-correction methods for historical Turkic texts written in Arabic script. The experiment is part of the broader project on AI methods for recognition and analysis of historical Arabic-script Turkic documents.
 
-The following methods were evaluated:
+The current pilot focuses on a small but topic-aligned corpus instead of the earlier Persian/general Arabic-script prototype.
 
-1. Identity baseline: returns the noisy input unchanged.
-2. Rule-based normalizer: applies deterministic Arabic-script normalization rules.
-3. ByT5-small 128 / 1 epoch: neural byte-level sequence-to-sequence model.
-4. ByT5-small 128 train / 256 decode: the same trained model decoded with a larger generation limit.
-5. ByT5-small 256 / 2 epochs: neural model trained with longer input/output length and two epochs.
+## Corpus
 
-## Metrics
+The corpus was collected from an Ottoman Turkish Arabic-script Wikisource text:
 
-The evaluation uses:
+- source text: `أوقرانيا، روسيه وتوركيه (مقالەلر مجموعەسى)`
+- page range: 5–71
+- collected clean text blocks: 400
+- raw text file: `data/postcorrection/raw/arabic_turkic_clean_text.txt`
+- source note: `data/postcorrection/raw/SOURCES.md`
 
-- CER: Character Error Rate.
-- WER: Word Error Rate.
-- Exact Match: share of predictions exactly equal to the target line.
+The text contains Arabic-script Ottoman/Turkic forms such as:
 
-Lower CER and WER are better. Higher Exact Match is better.
+- `توركيه`
+- `اوقراينا`
+- `عثمانلی`
+- `ايدى`
+- `بولیوردی`
 
-## Results
+## Dataset construction
 
-| Method | CER | WER | Exact Match |
-|---|---:|---:|---:|
-| Identity baseline | 0.0812 | 0.3655 | 0.0193 |
-| Rule-based normalizer | 0.0906 | 0.3932 | 0.0164 |
-| ByT5-small 128 / 1 epoch | 0.1290 | 0.3731 | 0.0156 |
-| ByT5-small 128 train / 256 decode | 0.0812 | 0.3268 | 0.0171 |
-| ByT5-small 256 / 2 epochs | 0.0552 | 0.2368 | 0.0506 |
+The post-correction dataset is synthetic: clean Arabic-script Turkic lines are corrupted by a controlled noise generator that imitates OCR-like errors.
 
-## Main Finding
+Generated splits:
 
-The best model is ByT5-small trained with sequence length 256 for two epochs. It reduces CER from 0.0812 for the identity baseline to 0.0552.
+| Split | Rows | Unique clean lines |
+|---|---:|---:|
+| train | 6400 | 320 |
+| valid | 800 | 40 |
+| test | 800 | 40 |
 
-This corresponds to approximately 32% relative CER reduction compared with the identity baseline.
+The split is performed by clean source lines, so variants of the same clean line do not appear across different splits.
+
+Leakage check:
+
+| Overlap | Count |
+|---|---:|
+| train ∩ valid clean lines | 0 |
+| train ∩ test clean lines | 0 |
+| valid ∩ test clean lines | 0 |
+
+## Baseline results
+
+Evaluation on the Arabic-script Turkic test split:
+
+| Method | CER | WER | ExactMatch | N |
+|---|---:|---:|---:|---:|
+| Identity baseline | 0.086005 | 0.519006 | 0.001250 | 800 |
+| Rule-based normalizer | 0.151932 | 0.684408 | 0.000000 | 800 |
 
 ## Interpretation
 
-The pilot shows that a byte-level neural model can learn useful post-correction patterns for Arabic-script historical text. The improvement is especially visible in character-level accuracy.
+The identity baseline is stronger than the current rule-based normalizer. This suggests that naive normalization is harmful for this material: it may erase or distort meaningful Arabic-script Turkic orthographic features.
 
-However, the current setup is still a pilot. The noise is synthetic, and the dataset is not yet a full Arabic-Turkic historical benchmark. For the course paper, this is a strong experimental core. For a future article, the next step is to expand the dataset with real OCR outputs and Arabic-Turkic materials.
+This makes the pilot methodologically useful: the task cannot be solved by a simple normalization rule set, and it motivates neural post-correction with a sequence-to-sequence model such as ByT5.
 
-## Limitations
+## Next steps
 
-- The current dataset is based on synthetic OCR-like noise.
-- The experiment does not yet evaluate real OCR engine outputs.
-- The linguistic scope should be expanded toward Arabic-Turkic historical texts.
-- More detailed error analysis is needed.
-
-## Next Steps
-
-1. Add error analysis with successful and failed correction examples.
-2. Compare performance across line length groups.
-3. Add real OCR outputs if available.
-4. Expand the dataset toward Tatar and broader Arabic-Turkic historical materials.
-5. Prepare the course paper as an early version of a future benchmark/article.
+1. Train ByT5-small on the Arabic-script Turkic dataset.
+2. Compare neural post-correction against identity and rule-based baselines.
+3. Add qualitative error analysis.
+4. Extend the corpus with additional Arabic-script Turkic sources.
+5. Prepare this pipeline as a reusable part of the course paper and later thesis/article work.
