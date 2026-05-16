@@ -2,9 +2,9 @@
 
 ## Goal
 
-This pilot evaluates OCR post-correction methods for historical Turkic texts written in Arabic script. The experiment is part of the broader project on AI methods for recognition and analysis of historical Arabic-script Turkic documents.
+This pilot evaluates OCR post-correction methods for historical Turkic texts written in Arabic script. The experiment is part of a broader project on AI methods for recognition and analysis of historical Arabic-script Turkic documents.
 
-The current pilot focuses on a small but topic-aligned corpus instead of the earlier Persian/general Arabic-script prototype.
+The current version replaces the earlier Persian/general Arabic-script prototype with a topic-aligned Ottoman Turkish Arabic-script corpus.
 
 ## Corpus
 
@@ -36,7 +36,7 @@ Generated splits:
 | valid | 800 | 40 |
 | test | 800 | 40 |
 
-The split is performed by clean source lines, so variants of the same clean line do not appear across different splits.
+The split is performed by clean source lines. Variants of the same clean line do not appear across different splits.
 
 Leakage check:
 
@@ -46,7 +46,22 @@ Leakage check:
 | train ∩ test clean lines | 0 |
 | valid ∩ test clean lines | 0 |
 
-## Baseline results
+## Methods
+
+The pilot compares three approaches:
+
+1. **Identity baseline**: returns the noisy input unchanged.
+2. **Rule-based normalizer**: applies simple Arabic-script normalization rules.
+3. **ByT5-small**: a byte-level sequence-to-sequence model fine-tuned for OCR post-correction.
+
+Two ByT5 settings were explored during experimentation:
+
+- `max_source_length=256`, `max_target_length=256`
+- `max_source_length=512`, `max_target_length=512`
+
+The 512-token setting is important because ByT5 operates on byte-level representations. For Arabic-script text, one visible character may require multiple bytes, so short byte-level limits may truncate source or target sequences.
+
+## Final results
 
 Evaluation on the Arabic-script Turkic test split:
 
@@ -54,17 +69,37 @@ Evaluation on the Arabic-script Turkic test split:
 |---|---:|---:|---:|---:|
 | Identity baseline | 0.086005 | 0.519006 | 0.001250 | 800 |
 | Rule-based normalizer | 0.151932 | 0.684408 | 0.000000 | 800 |
+| ByT5-small 512 / 2 epochs | 0.079913 | 0.368540 | 0.003750 | 800 |
 
 ## Interpretation
 
-The identity baseline is stronger than the current rule-based normalizer. This suggests that naive normalization is harmful for this material: it may erase or distort meaningful Arabic-script Turkic orthographic features.
+The rule-based normalizer performs worse than the identity baseline. This suggests that naive normalization can be harmful for Arabic-script Turkic material, because it may distort meaningful orthographic features.
 
-This makes the pilot methodologically useful: the task cannot be solved by a simple normalization rule set, and it motivates neural post-correction with a sequence-to-sequence model such as ByT5.
+The ByT5-small 512-token model improves over the identity baseline on both CER and WER. The improvement is moderate on character-level accuracy and stronger on word-level accuracy.
+
+Relative to the identity baseline:
+
+- CER improves from 0.086005 to 0.079913;
+- WER improves from 0.519006 to 0.368540.
+
+This supports the main technical hypothesis of the pilot: neural post-correction can improve synthetic OCR-style corruptions for historical Arabic-script Turkic text, but sequence length is a critical parameter for byte-level models.
+
+## Limitations
+
+This is still a pilot experiment, not a final benchmark.
+
+Current limitations:
+
+- the corpus is small: 400 clean text blocks;
+- the data comes from one main source;
+- OCR errors are synthetic rather than produced by a real OCR engine;
+- exact match remains low because the lines are long and orthographically complex;
+- the evaluation does not yet include manual linguistic validation.
 
 ## Next steps
 
-1. Train ByT5-small on the Arabic-script Turkic dataset.
-2. Compare neural post-correction against identity and rule-based baselines.
-3. Add qualitative error analysis.
-4. Extend the corpus with additional Arabic-script Turkic sources.
-5. Prepare this pipeline as a reusable part of the course paper and later thesis/article work.
+1. Add qualitative error analysis.
+2. Compare ByT5 256 and 512 outputs directly.
+3. Extend the corpus with additional Arabic-script Turkic sources.
+4. Add real OCR/HTR outputs if available.
+5. Prepare the experiment as a reproducible benchmark component for the course paper, thesis, and future article.
