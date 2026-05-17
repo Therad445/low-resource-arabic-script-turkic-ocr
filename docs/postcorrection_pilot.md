@@ -84,6 +84,28 @@ Relative to the identity baseline:
 
 This supports the main technical hypothesis of the pilot: neural post-correction can improve synthetic OCR-style corruptions for historical Arabic-script Turkic text, but sequence length is a critical parameter for byte-level models.
 
+## Error analysis
+
+In addition to aggregate CER/WER scores, the ByT5-small 512 model was analyzed at the individual test-sample level.
+
+The model improves most test samples:
+
+| Criterion | Improved | Unchanged | Worse | Total |
+|---|---:|---:|---:|---:|
+| CER | 682 | 60 | 58 | 800 |
+| WER | 677 | 63 | 60 | 800 |
+
+The mean per-sample CER improvement is 0.006092, and the mean per-sample WER improvement is 0.150467.
+
+This confirms that the final model does not only improve the average score due to a few outliers: it improves the majority of test lines. At the same time, the presence of 58 CER-worse and 60 WER-worse cases shows that the model is not uniformly safe and still requires qualitative error analysis before use in a historical text processing pipeline.
+
+The generated analysis files are stored in:
+
+- `outputs/postcorrection/error_analysis/byt5_512_error_summary.csv`
+- `outputs/postcorrection/error_analysis/byt5_512_best_examples.csv`
+- `outputs/postcorrection/error_analysis/byt5_512_worst_examples.csv`
+- `outputs/postcorrection/error_analysis/byt5_512_error_analysis.csv`
+
 ## Limitations
 
 This is still a pilot experiment, not a final benchmark.
