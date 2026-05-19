@@ -65,9 +65,9 @@ def evaluate_dataframe(df: pd.DataFrame, pred_col: str, target_col: str) -> dict
     refs = df[target_col].fillna("").astype(str).tolist()
 
     return {
-        "CER": sum(cer(p, r) for p, r in zip(preds, refs)) / len(refs),
-        "WER": sum(wer(p, r) for p, r in zip(preds, refs)) / len(refs),
-        "ExactMatch": sum(exact_match(p, r) for p, r in zip(preds, refs)) / len(refs),
+        "CER": sum(cer(p, r) for p, r in zip(preds, refs, strict=True)) / len(refs),
+        "WER": sum(wer(p, r) for p, r in zip(preds, refs, strict=True)) / len(refs),
+        "ExactMatch": sum(exact_match(p, r) for p, r in zip(preds, refs, strict=True)) / len(refs),
         "N": float(len(refs)),
     }
 

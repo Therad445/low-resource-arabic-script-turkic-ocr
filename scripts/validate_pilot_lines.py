@@ -151,7 +151,10 @@ def main() -> None:
             non_normalized_diplomatic.append(line_id)
 
         if row["transcription_normalized"]:
-            if normalize_text_v1(row["transcription_normalized"]) != row["transcription_normalized"]:
+            if (
+                normalize_text_v1(row["transcription_normalized"])
+                != row["transcription_normalized"]
+            ):
                 non_normalized_normalized.append(line_id)
 
         if doc_row["status"] not in ALLOWED_DOC_STATUSES_FOR_LINES:

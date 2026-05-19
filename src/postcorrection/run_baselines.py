@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.postcorrection.normalize import identity, normalize_arabic_script
 from src.postcorrection.evaluate import evaluate_dataframe
+from src.postcorrection.normalize import identity, normalize_arabic_script
 
 
 def main() -> None:

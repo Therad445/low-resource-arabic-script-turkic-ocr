@@ -44,7 +44,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Create qualitative and quantitative OCR post-correction error analysis."
     )
-    parser.add_argument("--predictions", required=True, help="CSV with noisy, prediction, clean columns.")
+    parser.add_argument(
+        "--predictions", required=True, help="CSV with noisy, prediction, clean columns."
+    )
     parser.add_argument("--out_dir", required=True, help="Output directory.")
     parser.add_argument("--source_col", default="noisy")
     parser.add_argument("--text_col", default="prediction")
@@ -62,7 +64,9 @@ def main() -> None:
     required = [args.source_col, args.text_col, args.target_col]
     missing = [col for col in required if col not in df.columns]
     if missing:
-        raise ValueError(f"Missing required columns: {missing}. Available columns: {list(df.columns)}")
+        raise ValueError(
+            f"Missing required columns: {missing}. Available columns: {list(df.columns)}"
+        )
 
     rows = []
 

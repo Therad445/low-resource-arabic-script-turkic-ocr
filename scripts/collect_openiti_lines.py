@@ -26,7 +26,7 @@ def is_good_line(line: str, min_chars: int, max_chars: int) -> bool:
     if len(line) > max_chars:
         return False
     # Keep lines that contain at least one Arabic-script character.
-    return any("\u0600" <= ch <= "\u06FF" for ch in line)
+    return any("\u0600" <= ch <= "\u06ff" for ch in line)
 
 
 def main() -> None:

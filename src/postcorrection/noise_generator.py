@@ -10,7 +10,6 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 
-
 CONFUSION_GROUPS = [
     list("بتثني"),
     list("جحخ"),
@@ -62,10 +61,17 @@ def _build_confusion_map() -> dict[str, list[str]]:
 
 
 CONFUSION_MAP = _build_confusion_map()
-ARABIC_CHARS = sorted(set("".join("".join(group) for group in CONFUSION_GROUPS) + "".join(NORMALIZATION_CONFUSIONS.keys())))
+ARABIC_CHARS = sorted(
+    set(
+        "".join("".join(group) for group in CONFUSION_GROUPS)
+        + "".join(NORMALIZATION_CONFUSIONS.keys())
+    )
+)
 
 
-def inject_noise(text: str, config: NoiseConfig | None = None, rng: random.Random | None = None) -> str:
+def inject_noise(
+    text: str, config: NoiseConfig | None = None, rng: random.Random | None = None
+) -> str:
     """Return one noisy version of a clean line."""
     config = config or NoiseConfig()
     rng = rng or random.Random()

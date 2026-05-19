@@ -3,11 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import time
 import urllib.parse
 import urllib.request
-import time
 from pathlib import Path
-
 
 API_URL = "https://ar.wikisource.org/w/api.php"
 BASE_TITLE = "صفحة:أوقرانيا، روسيه وتوركيه (مقالەلر مجموعەسى).pdf/{}"
@@ -135,7 +134,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--start", type=int, default=5)
     parser.add_argument("--end", type=int, default=71)
-    parser.add_argument("--out", type=Path, default=Path("data/postcorrection/raw/arabic_turkic_clean_text.txt"))
+    parser.add_argument(
+        "--out", type=Path, default=Path("data/postcorrection/raw/arabic_turkic_clean_text.txt")
+    )
     parser.add_argument("--sources", type=Path, default=Path("data/postcorrection/raw/SOURCES.md"))
     parser.add_argument("--min_len", type=int, default=35)
     parser.add_argument("--max_len", type=int, default=180)

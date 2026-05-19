@@ -33,7 +33,7 @@ def entity_recall(texts: list[str], refs: list[str], entities: list[str]) -> flo
     total = 0
     found = 0
 
-    for text, ref in zip(texts, refs):
+    for text, ref in zip(texts, refs, strict=True):
         gold_entities = [e for e in entities if contains_entity(ref, e)]
         total += len(gold_entities)
         found += sum(1 for e in gold_entities if contains_entity(text, e))

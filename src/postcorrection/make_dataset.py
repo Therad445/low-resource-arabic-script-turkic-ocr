@@ -13,13 +13,13 @@ python src/make_dataset.py --input data/raw/clean_text.txt --out_dir data/proces
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 import random
+from pathlib import Path
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.postcorrection.noise_generator import inject_noise, NoiseConfig
+from src.postcorrection.noise_generator import NoiseConfig, inject_noise
 
 
 def read_clean_lines(path: Path) -> list[str]:
