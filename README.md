@@ -2,70 +2,138 @@
 
 ![CI](https://github.com/Therad445/low-resource-arabic-script-turkic-ocr/actions/workflows/ci.yml/badge.svg)
 
-Reproducible OCR/HTR experiments for historical Turkic texts written in Arabic script
-(Tatar/Bashkir focus). The repository is built as a research workflow:
-data protocol, benchmark splits, baselines, evaluation (CER/WER), and error analysis.
+Research repository for low-resource OCR/HTR and OCR post-correction experiments on historical Turkic texts written in Arabic script.
 
-## Scope
-
-* **Input:** scanned pages and/or line crops from historical sources (printed first; handwritten later).
-* **Output:** machine-readable transcription in Arabic script.
-* **Metrics:** CER, WER.
-* **Research focus:** low-resource historical OCR with document-level evaluation.
+The current main result is a reproducible pilot for OCR post-correction of Arabic-script Turkic text: corpus collection, synthetic noisy/clean dataset construction, baseline evaluation, ByT5-small fine-tuning, metrics, and error analysis.
 
 ## Current status
 
-Sprint 1 foundation is in place:
+The repository currently contains two connected layers:
 
-* canonical line manifest format;
-* conservative GT normalization;
-* GT and manifest validation scripts;
-* document-level split generation;
-* sanity evaluation pipeline.
+1. General OCR/HTR research scaffold for historical Arabic-script Turkic documents.
+2. A completed post-correction pilot used as the technical basis for the course paper draft.
 
-## Data
+The post-correction pilot includes:
 
-This repository does **not** publish copyrighted or restricted scans.
-See `data/README.md` for local folder layout and access notes.
+- Ottoman Turkish / Arabic-script Turkic corpus collection from Arabic Wikisource;
+- 400 collected clean text blocks;
+- synthetic OCR-like noisy/clean pair generation;
+- train/valid/test split without clean-line leakage;
+- identity and rule-based baseline evaluation;
+- ByT5-small 512-token experiment;
+- aggregate metrics and per-sample error analysis;
+- course paper draft and polishing TODO.
 
-Canonical manifest example:
+## Main documents
 
-* `data/metadata/line_manifest_v1.tsv`
+- `docs/postcorrection_pilot.md` — compact technical summary of the post-correction pilot.
+- `docs/course_paper_draft.md` — current course paper draft.
+- `docs/course_paper_todo.md` — checklist for polishing, references, formatting, and final review.
+- `docs/course_paper_outline.md` — initial course paper outline.
 
-Document-level split generator:
+## Post-correction data
+
+Raw collected corpus:
+
+- `data/postcorrection/raw/arabic_turkic_clean_text.txt`
+- `data/postcorrection/raw/SOURCES.md`
+
+Processed dataset:
+
+- `data/postcorrection/processed/train.csv`
+- `data/postcorrection/processed/valid.csv`
+- `data/postcorrection/processed/test.csv`
+- `data/postcorrection/processed/dataset_stats.csv`
+
+Dataset summary:
+
+| Split | Clean lines | Noisy-clean pairs |
+|---|---:|---:|
+| train | 320 | 6400 |
+| valid | 40 | 800 |
+| test | 40 | 800 |
+
+## Post-correction results
+
+Evaluation on the Arabic-script Turkic test split:
+
+| Method | CER | WER | ExactMatch | N |
+|---|---:|---:|---:|---:|
+| Identity baseline | 0.086005 | 0.519006 | 0.001250 | 800 |
+| Rule-based normalizer | 0.151932 | 0.684408 | 0.000000 | 800 |
+| ByT5-small 512 / 2 epochs | 0.079913 | 0.368540 | 0.003750 | 800 |
+
+Per-sample error analysis for ByT5-small 512:
+
+| Criterion | Improved | Unchanged | Worse | Total |
+|---|---:|---:|---:|---:|
+| CER | 682 | 60 | 58 | 800 |
+| WER | 677 | 63 | 60 | 800 |
+
+## Key scripts
+
+Corpus collection:
 
 ```bash
-python -m scripts.make_doc_splits \
-  --manifest data/metadata/line_manifest_v1.tsv \
-  --out_dir data/splits/v1 \
+python3 scripts/collect_wikisource_ottoman_ukraine.py \
+  --start 5 \
+  --end 71 \
+  --out data/postcorrection/raw/arabic_turkic_clean_text.txt \
+  --sources data/postcorrection/raw/SOURCES.md
+```
+
+Dataset construction:
+
+```bash
+python3 -m src.postcorrection.make_dataset \
+  --input data/postcorrection/raw/arabic_turkic_clean_text.txt \
+  --out_dir data/postcorrection/processed \
+  --variants 20 \
   --seed 42
 ```
 
-## Evaluation
-
-Validate GT:
+Baseline evaluation:
 
 ```bash
-python -m scripts.validate_gt --gt datasets/gold_test_v1/labels/gt.tsv
+python3 -m src.postcorrection.run_baselines \
+  --test data/postcorrection/processed/test.csv \
+  --out outputs/postcorrection/baseline_predictions.csv \
+  --metrics outputs/postcorrection/baseline_metrics.csv
 ```
 
-Run evaluation:
+ByT5 prediction evaluation artifacts:
+
+- `outputs/postcorrection/byt5_arabic_turkic_512_2ep_predictions.csv`
+- `outputs/postcorrection/byt5_arabic_turkic_512_2ep_metrics.csv`
+
+Error analysis:
 
 ```bash
-python -m scripts.run_eval \
-  --gt datasets/gold_test_v1/labels/gt.tsv \
-  --pred experiments/2026-01-17_toy_sanity/predictions.tsv \
-  --exp_dir experiments/tmp_sanity \
-  --tag sanity
+python3 scripts/postcorrection_error_analysis.py \
+  --predictions outputs/postcorrection/byt5_arabic_turkic_512_2ep_predictions.csv \
+  --out_dir outputs/postcorrection/error_analysis
 ```
 
-## Reproducibility
+## Important limitations
 
-* Configs live in `configs/`
-* Each run is logged in `experiments/YYYY-MM-DD_<name>/`
-* Splits are made by **document**, not by line
+This is a pilot experiment, not a final benchmark.
+
+Current limitations:
+
+- the corpus is small;
+- the current pilot uses one main source;
+- OCR-like errors are synthetic;
+- evaluation does not yet include manual linguistic validation;
+- real OCR/HTR outputs should be added for a stronger benchmark.
+
+## Reproducibility notes
+
+The repository stores code, datasets, metrics, predictions, and analysis files for the pilot. Model weights are not stored in git.
+
+The general CI checks linting, formatting, tests, and the earlier OCR/HTR sanity pipeline. The post-correction pipeline is documented and reproducible, but it is not yet fully integrated into CI.
 
 ## License
 
-Code: MIT (see `LICENSE`)
-Data: depends on source permissions; see `docs/04_ethics_and_licenses.md`
+Code: MIT (see `LICENSE`).
+
+Data: depends on source permissions. The current post-correction pilot uses text collected from Wikisource; attribution and source notes are stored in `data/postcorrection/raw/SOURCES.md`.
