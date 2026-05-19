@@ -24,6 +24,16 @@ The post-correction pilot includes:
 - aggregate metrics and per-sample error analysis;
 - course paper draft and polishing TODO.
 
+## Post-correction dependencies
+
+The post-correction pilot has a separate runtime dependency file:
+
+```bash
+python3 -m pip install -r requirements-postcorrection.txt
+```
+
+Development and CI dependencies are listed in `requirements-dev.txt`.
+
 ## Main documents
 
 - `docs/postcorrection_pilot.md` — compact technical summary of the post-correction pilot.

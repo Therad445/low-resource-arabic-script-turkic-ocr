@@ -1,0 +1,10 @@
+# Runtime dependencies for the OCR post-correction pilot.
+# Dev/CI dependencies live in requirements-dev.txt.
+
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+torch>=2.0.0
+transformers>=4.40.0
+datasets>=2.18.0
+accelerate>=0.26.0
