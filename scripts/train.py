@@ -3,7 +3,7 @@ from __future__ import annotations
 
 def main() -> None:
     print(
-        "TODO: training entrypoint. Start with Kraken/eScriptorium fine-tuning, then integrate here if needed."
+        "Not implemented in the current post-correction pilot: OCR/HTR training is outside the current text-only post-correction scope."
     )
 
 
