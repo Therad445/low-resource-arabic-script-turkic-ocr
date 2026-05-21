@@ -63,7 +63,7 @@ The 512-token setting is important because ByT5 operates on byte-level represent
 
 ## Final results
 
-Evaluation on the Arabic-script Turkic test split:
+Evaluation on the Arabic-script Turkic test split. The combined metrics table is stored in `outputs/postcorrection/final_metrics.csv`:
 
 | Method | CER | WER | ExactMatch | N |
 |---|---:|---:|---:|---:|
@@ -82,7 +82,7 @@ Relative to the identity baseline:
 - CER improves from 0.086005 to 0.079913;
 - WER improves from 0.519006 to 0.368540.
 
-This supports the main technical hypothesis of the pilot: neural post-correction can improve synthetic OCR-style corruptions for historical Arabic-script Turkic text, but sequence length is a critical parameter for byte-level models.
+This supports the main technical hypothesis of the pilot: neural post-correction can improve synthetic OCR-style corruptions for historical Arabic-script Turkic text, while sequence length should be treated as an important experimental parameter for byte-level models.
 
 ## Error analysis
 
@@ -120,8 +120,8 @@ Current limitations:
 
 ## Next steps
 
-1. Add qualitative error analysis.
-2. Compare ByT5 256 and 512 outputs directly.
+1. Add 2–3 qualitative best/worst examples to the course paper or appendix if time permits.
+2. Compare ByT5 256 and 512 outputs more directly in a separate ablation table.
 3. Extend the corpus with additional Arabic-script Turkic sources.
-4. Add real OCR/HTR outputs if available.
-5. Prepare the experiment as a reproducible benchmark component for the course paper, thesis, and future article.
+4. Add real OCR/HTR outputs and manually validated clean text.
+5. Prepare the experiment as a reproducible benchmark component for the thesis and a possible future article.
