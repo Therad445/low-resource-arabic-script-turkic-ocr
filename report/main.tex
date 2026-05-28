@@ -160,6 +160,21 @@ The improvement is stronger for WER than for CER. This indicates that the model 
 
 The error analysis shows that the model improves most test examples, but it is not uniformly safe. Some predictions are worse than the noisy input. Therefore, the model should be treated as a useful post-correction component rather than a fully automatic scholarly transcription tool.
 
+
+\subsection{Qualitative Examples}
+
+In addition to aggregate metrics, we inspected individual examples. Table~\ref{tab:qualitative} shows representative improved and degraded cases. The full Arabic-script noisy, predicted and clean strings are provided in \texttt{docs/nlp\_final/qualitative\_examples\_full.md}. The examples confirm that ByT5 often repairs local OCR-like distortions, but can also introduce harmful changes.
+
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/qualitative_examples}
+\caption{Representative qualitative examples for ByT5-small 512. Positive $\Delta$ values mean improvement over the noisy input.}
+\label{tab:qualitative}
+\end{center}
+\end{table}
+
+
 \section{Limitations}
 
 The current benchmark is intentionally limited. First, the corpus is small and comes from one main source. Second, the noisy-clean pairs are based on synthetic OCR-like corruptions rather than real OCR or HTR outputs. Third, the model is evaluated automatically and has not yet been validated by a domain expert. Finally, some ByT5 predictions are worse than the original noisy input, so the model should be used as an assistive post-correction component rather than a fully automatic scholarly transcription system.
