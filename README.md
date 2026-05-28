@@ -6,6 +6,37 @@ Research repository for low-resource OCR/HTR and OCR post-correction experiments
 
 The current main result is a reproducible pilot for OCR post-correction of Arabic-script Turkic text: corpus collection, synthetic noisy/clean dataset construction, baseline evaluation, ByT5-small fine-tuning, metrics, and error analysis.
 
+
+
+## NLP Course Final Project
+
+This repository contains the NLP-course final project **A Reproducible Benchmark for OCR Post-Correction of Low-Resource Arabic-Script Turkic Historical Texts**.
+
+The project studies OCR post-correction as a sequence-to-sequence NLP task:
+
+```text
+noisy OCR-like Arabic-script Turkic text -> clean historical text
+```
+
+Main submission artifacts:
+
+- project landing page: [`NLP_FINAL_PROJECT.md`](NLP_FINAL_PROJECT.md);
+- final PDF report: [`report/final_report.pdf`](report/final_report.pdf);
+- LaTeX report source: [`report/main.tex`](report/main.tex);
+- dataset card: [`DATASET_CARD.md`](DATASET_CARD.md);
+- model card: [`MODEL_CARD.md`](MODEL_CARD.md);
+- reproduction guide: [`REPRODUCE.md`](REPRODUCE.md).
+
+Main result on the proposed benchmark:
+
+| Method | CER ↓ | WER ↓ | Exact Match ↑ | N |
+|---|---:|---:|---:|---:|
+| Identity baseline | 0.086005 | 0.519006 | 0.001250 | 800 |
+| Rule-based normalizer | 0.151932 | 0.684408 | 0.000000 | 800 |
+| **ByT5-small 512 / 2 epochs** | **0.079913** | **0.368540** | **0.003750** | 800 |
+
+Safe claim: ByT5-small 512 achieves the best CER/WER among evaluated methods on the proposed benchmark. This is a pilot post-correction benchmark, not a full image-based OCR/HTR system.
+
 ## Current status
 
 The repository currently contains two connected layers:
