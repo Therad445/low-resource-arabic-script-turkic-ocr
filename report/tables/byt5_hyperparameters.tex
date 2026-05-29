@@ -1,0 +1,18 @@
+\begin{tabular}{lr}
+\toprule
+Setting & Value \\
+\midrule
+Model family & ByT5-small \\
+Task formulation & line-level sequence-to-sequence post-correction \\
+Input & noisy OCR-like text line \\
+Target & clean historical text line \\
+Maximum source length & 512 byte-level tokens \\
+Maximum target length & 512 byte-level tokens \\
+Training epochs & 2 \\
+Training pairs & 6400 \\
+Validation pairs & 800 \\
+Test pairs & 800 \\
+Evaluation metrics & CER, WER, Exact Match \\
+Final results file & \path{outputs/postcorrection/final_metrics.csv} \\
+\bottomrule
+\end{tabular}

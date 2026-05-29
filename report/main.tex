@@ -96,24 +96,67 @@ Table~\ref{tab:related-work} summarizes the most relevant previous work and how 
 \end{table}
 
 
-\section{Model Description}
 
-The project compares three approaches.
+\section{Model Description}
+\label{sec:model}
+
+The project is structured as a text-level OCR post-correction pipeline rather than a full image-based OCR system. The input to every method is a noisy OCR-like Arabic-script Turkic line, and the output is a corrected line that should match the clean reference. The pipeline is summarized in Table~\ref{tab:pipeline-components}.
+
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/pipeline_components}
+\caption{Main components of the proposed OCR post-correction pipeline.}
+\label{tab:pipeline-components}
+\end{center}
+\end{table}
+
+\subsection{Task Formulation}
+
+Let $x$ denote a noisy OCR-like line and $y$ denote the corresponding clean historical line. The goal is to learn or define a correction function $f$ such that:
+\[
+    \hat{y} = f(x),
+\]
+where $\hat{y}$ should be as close as possible to $y$ according to character-level, word-level and exact-match metrics. This formulation deliberately abstracts away from image processing and focuses on the NLP stage after OCR or HTR has already produced a textual hypothesis.
 
 \subsection{Identity Baseline}
 
-The identity baseline returns the noisy input unchanged. It measures the initial quality of the synthetic OCR-like text and serves as the simplest reference point.
+The identity baseline defines $f(x)=x$. It does not attempt any correction. This baseline is important because it measures the raw difficulty of the noisy synthetic OCR-like text. If a model does not improve over identity, then it is not useful as a post-correction component. In this project, identity also provides a conservative lower bound: it cannot hallucinate new errors, but it also cannot repair any existing corruption.
 
 \subsection{Rule-Based Normalizer}
 
-The rule-based normalizer applies simple Arabic-script normalization rules. This baseline tests whether naive character normalization is useful for this material. Since historical orthography may contain meaningful variation, aggressive normalization can be harmful.
+The rule-based normalizer applies simple Arabic-script normalization rules. Its purpose is to test whether hand-written character normalization can already solve a substantial part of the benchmark. This is a meaningful baseline for Arabic-script text because several characters may have visually or historically related forms.
+
+However, this baseline is intentionally limited. Historical Arabic-script Turkic orthography may preserve meaningful variation, and aggressive normalization can destroy distinctions that are important for the clean reference. Therefore, the rule-based baseline is expected to be interpretable but not necessarily strong. Its poor performance in the final results confirms that naive normalization is not sufficient for this benchmark.
 
 \subsection{ByT5-small}
 
-The main neural approach is ByT5-small. It is fine-tuned as a sequence-to-sequence model. The input is a noisy OCR-like line, and the target is the corresponding clean line. The final evaluated configuration uses 512-token source and target sequence lengths and is trained for 2 epochs.
+The main neural model is ByT5-small \cite{xue2022byt5}. It is fine-tuned as an encoder-decoder sequence-to-sequence model. The encoder reads the noisy line, and the decoder generates the corrected line. The training objective is to maximize the likelihood of the clean target sequence conditioned on the noisy input sequence.
 
-The use of a byte-level model is motivated by the low-resource and noisy nature of the task. Arabic-script characters may occupy multiple bytes, and historical spelling variation can be poorly represented by standard subword tokenizers. Therefore, sequence length is an important experimental parameter.
+ByT5 is appropriate for this task because it operates at the byte level rather than relying on a fixed word or subword vocabulary. This matters for Arabic-script historical text for three reasons. First, rare historical spellings may be poorly represented by standard subword tokenizers. Second, OCR-like noise can create malformed or rare fragments. Third, Arabic-script characters and mixed orthographic conventions can make vocabulary-based modelling fragile. Byte-level modelling avoids out-of-vocabulary tokens and makes the model directly sensitive to local character distortions.
 
+The final reported configuration uses 512-token source and target lengths and 2 training epochs. The 512-token length is important because the dataset contains relatively long lines, and shorter sequence limits may truncate information needed for correction.
+
+\begin{table}[tbh!]
+\begin{center}
+\input{tables/byt5_hyperparameters}
+\caption{Final ByT5-small configuration used in the reported experiment.}
+\label{tab:byt5-hyperparams}
+\end{center}
+\end{table}
+
+\subsection{Compared Methods}
+
+Table~\ref{tab:compared-methods} summarizes the compared methods. The comparison is intentionally simple but covers three different levels of modelling complexity: no correction, rule-based correction and neural sequence-to-sequence correction.
+
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/compared_methods}
+\caption{Compared OCR post-correction methods.}
+\label{tab:compared-methods}
+\end{center}
+\end{table}
 
 
 \section{Dataset}
@@ -207,7 +250,9 @@ Figure~\ref{fig:dataset-examples} shows representative noisy-clean pairs from th
 \end{figure}
 
 
+
 \section{Experiments}
+\label{sec:experiments}
 
 \subsection{Metrics}
 
@@ -224,17 +269,44 @@ WER is computed analogously at the word level:
 WER = \frac{S_w + D_w + I_w}{N_w}.
 \]
 
-Exact Match is the fraction of examples where the predicted line exactly matches the clean reference line.
+Exact Match is the fraction of examples where the predicted line exactly matches the clean reference line. Exact Match is a strict metric for this benchmark because the lines are long and contain historical orthographic variation. Therefore, CER and WER are more informative for partial improvements.
 
-\subsection{Experiment Setup}
+\subsection{Experimental Protocol}
 
-The benchmark contains train, validation and test splits. The final evaluation is performed on the test split. The identity and rule-based baselines are evaluated directly on the test set. The ByT5-small model is fine-tuned on the training split and evaluated on the test split.
+All methods are evaluated on the same held-out test split. The split is leakage-safe because it is based on clean source lines rather than noisy variants. The identity and rule-based baselines are evaluated directly on the test set. The ByT5-small model is fine-tuned on the training split and evaluated on the test split.
 
-The final ByT5-small configuration uses 512-token source and target sequence lengths and 2 training epochs. The main results are stored in \texttt{outputs/postcorrection/final\_metrics.csv}.
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/evaluation_protocol}
+\caption{Experimental protocol used in the benchmark.}
+\label{tab:evaluation-protocol}
+\end{center}
+\end{table}
 
-\subsection{Baselines}
+\subsection{Reproducibility and Stored Artifacts}
 
-The project includes two baselines. The identity baseline leaves noisy text unchanged. The rule-based normalizer applies simple Arabic-script normalization rules. These baselines are necessary because there is no previous published result on the proposed benchmark.
+The repository stores both the final report and the main intermediate artifacts required to inspect the experiment. Table~\ref{tab:experiment-artifacts} lists the most important files. The final metrics are stored in \path{outputs/postcorrection/final_metrics.csv}. The per-example error analysis is stored under \path{outputs/postcorrection/error_analysis/}. The reproduction guide is provided in \path{REPRODUCE.md}.
+
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/experiment_artifacts}
+\caption{Important reproducibility artifacts in the repository.}
+\label{tab:experiment-artifacts}
+\end{center}
+\end{table}
+
+\subsection{Baselines and Model Configuration}
+
+The benchmark includes two non-neural baselines and one neural model. The identity baseline is a conservative reference point. The rule-based normalizer tests whether simple Arabic-script normalization can repair the synthetic OCR-like errors. The ByT5-small model tests whether a byte-level sequence-to-sequence model can learn context-sensitive corrections.
+
+The final neural configuration is reported in Table~\ref{tab:byt5-hyperparams}. Because this is a course-scale pilot project, the experimental grid is intentionally limited. The goal is not to exhaustively tune every architecture, but to establish a reproducible benchmark and demonstrate that a byte-level neural model improves over simple baselines on this dataset.
+
+\subsection{Limitations of the Experimental Setup}
+
+The main experimental limitation is that the noisy data is synthetic. This makes the benchmark controlled and reproducible, but it does not fully reproduce real OCR or HTR error distributions. Another limitation is the small number of evaluated methods. The current comparison is sufficient to show that naive normalization is not enough and that ByT5-small is a stronger post-correction method, but future work should add more architectures, real OCR outputs, multiple random seeds and more extensive hyperparameter search.
+
 
 \section{Results}
 

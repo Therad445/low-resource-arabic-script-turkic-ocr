@@ -1,0 +1,9 @@
+\begin{tabular}{p{0.22\linewidth}p{0.36\linewidth}p{0.30\linewidth}}
+\toprule
+Method & Description & Why it is included \\
+\midrule
+Identity baseline & Returns the noisy input unchanged. & Measures the initial difficulty of the noisy OCR-like text and gives the minimum reference point. \\
+Rule-based normalizer & Applies simple Arabic-script character normalization rules. & Tests whether hand-written normalization is sufficient for this historical material. \\
+ByT5-small 512 / 2 epochs & Fine-tunes a byte-level encoder-decoder model to map noisy lines to clean lines. & Tests whether a neural sequence-to-sequence model can learn corrections beyond simple normalization. \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,13 @@
+\begin{tabular}{p{0.20\linewidth}p{0.34\linewidth}p{0.34\linewidth}}
+\toprule
+Component & Input / output & Role in the project \\
+\midrule
+Clean corpus & Historical Arabic-script Turkic text lines & Provides the reference text used as the clean target. \\
+Synthetic noise generator & Clean line $\rightarrow$ noisy OCR-like line & Simulates text-level OCR errors in a controlled and reproducible way. \\
+Leakage-safe splitter & Clean source lines $\rightarrow$ train/valid/test & Ensures that noisy variants of the same clean line do not appear in different splits. \\
+Baselines & Noisy line $\rightarrow$ corrected line & Establish simple non-neural reference points. \\
+ByT5-small & Noisy line $\rightarrow$ predicted clean line & Learns a byte-level sequence-to-sequence post-correction model. \\
+Evaluation & Prediction + clean reference & Computes CER, WER and Exact Match on the held-out test split. \\
+Error analysis & Per-example metric differences & Shows where the model improves the noisy input and where it makes it worse. \\
+\bottomrule
+\end{tabular}
