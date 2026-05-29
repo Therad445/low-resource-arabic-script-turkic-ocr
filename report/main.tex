@@ -95,7 +95,7 @@ Table~\ref{tab:related-work} summarizes the most relevant previous work and how 
 \end{center}
 \end{table}
 
-
+\clearpage
 
 \section{Model Description}
 \label{sec:model}
@@ -308,7 +308,11 @@ The final neural configuration is reported in Table~\ref{tab:byt5-hyperparams}. 
 The main experimental limitation is that the noisy data is synthetic. This makes the benchmark controlled and reproducible, but it does not fully reproduce real OCR or HTR error distributions. Another limitation is the small number of evaluated methods. The current comparison is sufficient to show that naive normalization is not enough and that ByT5-small is a stronger post-correction method, but future work should add more architectures, real OCR outputs, multiple random seeds and more extensive hyperparameter search.
 
 
+
 \section{Results}
+\label{sec:results}
+
+Table~\ref{tab:results} reports the final test-set results. The ByT5-small 512-token model achieves the best CER and WER among the evaluated methods on the proposed benchmark. The rule-based normalizer performs worse than the identity baseline. This is an important result: it shows that simple character normalization is not a safe post-correction strategy for this material.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -318,26 +322,33 @@ The main experimental limitation is that the noisy data is synthetic. This makes
 \end{center}
 \end{table}
 
-The ByT5-small 512-token model achieves the best CER and WER among the evaluated methods on the proposed benchmark. The rule-based normalizer performs worse than the identity baseline. This suggests that naive normalization can distort meaningful orthographic properties of historical Arabic-script Turkic text.
+\subsection{Metric-Level Interpretation}
 
-The improvement is stronger for WER than for CER. This indicates that the model often repairs word-level structure even when exact character-level recovery remains difficult. Exact Match remains low for all methods because the lines are long and orthographically complex.
+The identity baseline has CER $0.086005$ and WER $0.519006$. This means that the synthetic OCR-like noise is not catastrophic at the character level, but it still damages word-level structure substantially. The rule-based normalizer increases both CER and WER, which suggests that naive normalization changes many characters that should remain unchanged in the clean historical reference.
+
+ByT5-small improves CER from $0.086005$ to $0.079913$ and WER from $0.519006$ to $0.368540$. The WER improvement is stronger than the CER improvement. This suggests that the neural model often restores word-level structure even when it does not exactly recover every character. Exact Match remains low for all methods because the test examples are long: a single remaining character error makes the whole line fail exact matching.
+
+\subsection{Why the Rule-Based Baseline Fails}
+
+The rule-based normalizer is useful as a diagnostic baseline precisely because it is simple. Its worse performance indicates that the benchmark cannot be solved by blindly collapsing Arabic-script variants. In historical Arabic-script Turkic material, character variation may reflect orthographic convention rather than OCR noise. A safe post-correction model must therefore use context and avoid over-normalization.
 
 \subsection{Error Analysis}
+
+Table~\ref{tab:error-summary} compares each ByT5 prediction against the noisy input. The model improves most examples by both CER and WER, but it is not uniformly safe. Some predictions are worse than the original noisy line.
 
 \begin{table}[tbh!]
 \begin{center}
 \input{tables/error_summary}
 \caption{Per-sample error analysis for ByT5-small 512 compared with the noisy input.}
-\label{tab:error}
+\label{tab:error-summary}
 \end{center}
 \end{table}
 
-The error analysis shows that the model improves most test examples, but it is not uniformly safe. Some predictions are worse than the noisy input. Therefore, the model should be treated as a useful post-correction component rather than a fully automatic scholarly transcription tool.
-
+This failure pattern is important for practical use. The model should be treated as an assistive post-correction component: it can propose useful corrections, but its output should still be inspected by a human or filtered by confidence/error-detection mechanisms. For scholarly transcription, automatic correction without review would be risky.
 
 \subsection{Qualitative Examples}
 
-In addition to aggregate metrics, we inspected individual examples. Table~\ref{tab:qualitative} shows representative improved and degraded cases. The full Arabic-script noisy, predicted and clean strings are provided in \texttt{docs/nlp\_final/qualitative\_examples\_full.md}. The examples confirm that ByT5 often repairs local OCR-like distortions, but can also introduce harmful changes.
+In addition to aggregate metrics, we inspected individual examples. Table~\ref{tab:qualitative} shows representative improved and degraded cases. The full Arabic-script noisy, predicted and clean strings are provided in \path{docs/nlp_final/qualitative_examples_full.md}. The examples confirm that ByT5 often repairs local OCR-like distortions, but can also introduce harmful changes.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -347,6 +358,10 @@ In addition to aggregate metrics, we inspected individual examples. Table~\ref{t
 \label{tab:qualitative}
 \end{center}
 \end{table}
+
+\subsection{SotA Claim on the Proposed Benchmark}
+
+Since this benchmark is newly constructed in the project, there is no previously published result on exactly the same dataset and task. Therefore, the SotA claim is intentionally limited: ByT5-small 512 is the best-performing method among the evaluated approaches on the proposed benchmark. The project does not claim global state of the art for OCR post-correction in general.
 
 
 \section{Limitations}
