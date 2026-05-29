@@ -1,0 +1,17 @@
+
+\begin{tabular}{p{0.17\linewidth}p{0.14\linewidth}p{0.18\linewidth}p{0.20\linewidth}p{0.20\linewidth}}
+\toprule
+Work & Setting & Method & Main contribution & Relation to this project \\
+\midrule
+OCR4all \cite{reul2019ocr4all} & Historical printings & OCR workflow & Semi-automatic OCR workflow with ground-truth preparation and model training & Motivates the full historical OCR pipeline; this project focuses only on post-correction \\
+Springmann et al. \cite{springmann2018ocr} & Historical printings & OCR and corpus construction & Shows how historical OCR supports diachronic corpora & Provides historical OCR context and the need for downstream correction \\
+Lyu et al. \cite{lyu2021neural} & Historical German corpora & Neural post-correction & Character-level neural correction for historical OCR output & Closest neural post-correction baseline in spirit, but not Arabic-script or Turkic \\
+Hamalainen and Hengchen \cite{hamalainen2019paft} & Historical corpora & Unsupervised NMT & Automatically extracts parallel data for character-level NMT correction & Alternative to our supervised synthetic noisy-clean benchmark \\
+Duong et al. \cite{duong2020unsupervised} & Finnish historical corpora & Unsupervised seq2seq & Combines OCR correction with spelling normalisation & Shows low-resource post-correction without manual parallel data \\
+Suissa et al. \cite{suissa2023optimizing} & Historical Hebrew & Neural OCR correction & Studies task-specific training data and genre effects & Supports our focus on script-specific and corpus-specific error modelling \\
+Naiman et al. \cite{naiman2023large} & Historical scientific articles & Synthetic OCR data & Builds a large synthetic ground-truth OCR post-correction dataset & Justifies synthetic noisy-clean pairs as a practical benchmark strategy \\
+Kiessling et al. \cite{kiessling2024arabicocr} & Arabic-script OCR & Kraken OCR study & Provides Arabic-script OCR evaluation and error microanalysis & Directly motivates Arabic-script error analysis and training-data sensitivity \\
+ByT5 \cite{xue2022byt5} & Multilingual NLP & Byte-level Transformer & Avoids subword tokenization and improves robustness to noise & Main model choice for noisy Arabic-script post-correction \\
+Greif et al. \cite{greif2025multimodal} & Historical documents & Multimodal LLMs & Uses mLLMs for OCR, post-correction and NER & Recent frontier approach; our work is lighter and reproducible without mLLM APIs \\
+\bottomrule
+\end{tabular}

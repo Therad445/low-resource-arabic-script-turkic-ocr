@@ -46,24 +46,55 @@ The main contributions are:
 
 \textbf{Radmir} collected and prepared the corpus, constructed the synthetic post-correction dataset, implemented and evaluated the baselines, trained and evaluated the ByT5-small model, performed error analysis, prepared the repository and wrote the final report.
 
+
 \section{Related Work}
 \label{sec:related}
 
-\subsection{Historical OCR and HTR}
+\subsection{Historical OCR and HTR Workflows}
 
-OCR for historical documents differs from OCR for modern clean printed text. Historical material often contains unstable typography, damaged scans, non-standard spelling, complex layouts and domain-specific writing conventions. OCR workflows for historical printings therefore usually include data preparation, ground-truth construction, model training, post-processing and manual validation \cite{reul2019ocr4all,springmann2018ocr}.
+OCR for historical documents differs from OCR for modern clean printed text. Historical material often contains unstable typography, damaged scans, non-standard spelling, complex layouts and domain-specific writing conventions. OCR workflows for historical printings therefore usually include data preparation, ground-truth construction, model training, post-processing and manual validation \cite{reul2019ocr4all,springmann2018ocr}. These works are important for this project because they show that OCR quality is not only a model problem: it depends on data preparation, segmentation, document layout, transcription conventions and downstream correction.
+
+This project is narrower than a full OCR or HTR workflow. It does not train an image-to-text recognizer. Instead, it isolates the post-correction stage and asks whether a text-to-text model can improve noisy OCR-like output for Arabic-script Turkic historical text.
 
 \subsection{Arabic-Script OCR}
 
-Arabic-script OCR is challenging because letters change shape depending on their position, writing is cursive, and many characters differ only by small dots or diacritics. These issues become even more difficult in historical or multilingual contexts, where Arabic, Persian and Turkic orthographic traditions may overlap. Surveys of Arabic OCR emphasize that such script-specific properties require specialized handling \cite{naz2014arabicocr}.
+Arabic-script OCR is challenging because letters change shape depending on their position, the script is cursive, and many characters differ only by small dots or diacritics. These problems become stronger in historical or multilingual contexts, where Arabic, Persian and Turkic orthographic traditions can overlap. Earlier surveys emphasize such script-specific difficulties \cite{naz2014arabicocr}. More recent work on open-source Arabic-script OCR shows that accuracy depends strongly on training data, script coverage, line segmentation, layout analysis and the treatment of error patterns \cite{kiessling2024arabicocr}.
 
-\subsection{OCR Post-Correction}
+This motivates two design choices in the present project. First, the benchmark explicitly keeps Arabic-script characters rather than transliterating the data into Latin script. Second, the dataset analysis reports a character inventory and a taxonomy of synthetic OCR-like corruptions, because Arabic-script post-correction should not be evaluated only as generic text normalization.
 
-OCR post-correction aims to transform noisy OCR output into a cleaner textual representation. At the line level, this can naturally be formulated as a sequence-to-sequence task. The quality of post-correction is commonly evaluated with edit-distance-based metrics such as CER and WER, which are based on insertions, deletions and substitutions \cite{levenshtein1966binary}.
+\subsection{OCR Post-Correction Approaches}
+
+OCR post-correction transforms noisy OCR output into a cleaner textual representation. At the line level, it can be formulated as a sequence-to-sequence problem. Quality is commonly evaluated with edit-distance-based metrics such as CER and WER, which are based on insertions, deletions and substitutions \cite{levenshtein1966binary}.
+
+Several families of approaches exist. Rule-based and normalization-based systems are simple and interpretable, but they can be too aggressive when historical spelling variation is meaningful. Lexicon-based and edit-distance-based methods can help when a reliable vocabulary exists, but they are less suitable for low-resource historical corpora with unstable spelling. Neural post-correction methods learn character-level or sequence-level transformations from noisy-clean pairs. Lyu et al. \cite{lyu2021neural} proposed a neural approach for historical OCR post-hoc correction using character-level modelling and attention. Hamalainen and Hengchen \cite{hamalainen2019paft} and Duong et al. \cite{duong2020unsupervised} studied unsupervised extraction of parallel data for character-based sequence-to-sequence correction and spelling normalisation in historical corpora.
+
+Compared with these works, this project is smaller in scale but targets a rarer setting: Arabic-script Turkic historical text. The benchmark is also designed to be reproducible within a course project repository.
+
+\subsection{Low-Resource and Synthetic-Data Settings}
+
+A recurring difficulty in OCR post-correction is the lack of manually aligned noisy-clean data. This is especially severe for historical documents and low-resource languages. Suissa et al. \cite{suissa2023optimizing} show that OCR correction for historical Hebrew benefits from task-specific training data and that correction quality depends on genre and domain. Naiman et al. \cite{naiman2023large} use synthetic ground-truth/OCR data for post-correction of historical scientific articles, demonstrating that synthetic noisy-clean pairs can be a practical way to construct large training resources when direct aligned OCR correction data is limited.
+
+The present project follows the same general motivation, but at a smaller pilot scale. Synthetic corruption is not treated as a perfect substitute for real OCR output. Instead, it is used to build a controlled benchmark that can be extended later with real OCR or HTR predictions.
 
 \subsection{Transformer and Byte-Level Models}
 
-Transformer models \cite{vaswani2017attention} and text-to-text transfer learning \cite{raffel2020exploring} provide a general framework for sequence-to-sequence NLP tasks. In this project, we use ByT5 \cite{xue2022byt5}, a byte-level sequence-to-sequence model. Byte-level modeling is useful for noisy and low-resource settings because it avoids dependence on a fixed word or subword vocabulary. This is especially relevant for historical Arabic-script Turkic text, where rare spellings, mixed orthographic conventions and OCR-like distortions can make subword tokenization fragile.
+Transformer models \cite{vaswani2017attention} and text-to-text transfer learning \cite{raffel2020exploring} provide a general framework for sequence-to-sequence NLP tasks. In this project, the main neural model is ByT5 \cite{xue2022byt5}, a byte-level sequence-to-sequence model. Byte-level modelling is useful for noisy and low-resource settings because it avoids dependence on a fixed word or subword vocabulary. This is especially relevant for historical Arabic-script Turkic text, where rare spellings, mixed orthographic conventions and OCR-like distortions can make subword tokenization fragile.
+
+Recent work has also explored large and multimodal language models for historical OCR and post-correction. Greif et al. \cite{greif2025multimodal} study multimodal LLMs for OCR, OCR post-correction and named entity recognition in historical documents. Such approaches are promising, but they often require large proprietary models or image-based inputs. The present project instead uses a lightweight, reproducible fine-tuning setup on text-level noisy-clean pairs.
+
+\subsection{Positioning of This Work}
+
+Table~\ref{tab:related-work} summarizes the most relevant previous work and how it relates to this project. The main difference is that this project focuses on a small but explicit Arabic-script Turkic post-correction benchmark, with controlled synthetic noise, leakage-safe splits, baseline comparisons and error analysis.
+
+\begin{table}[tbh!]
+\begin{center}
+\scriptsize
+\input{tables/related_work_comparison}
+\caption{Comparison with related work on historical OCR, Arabic-script OCR and OCR post-correction.}
+\label{tab:related-work}
+\end{center}
+\end{table}
+
 
 \section{Model Description}
 
