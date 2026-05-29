@@ -1,0 +1,4 @@
+split,rows,unique_line_id,unique_clean,avg_clean_chars,median_clean_chars,min_clean_chars,max_clean_chars,avg_clean_words,avg_noisy_chars,median_noisy_chars,min_noisy_chars,max_noisy_chars,avg_noisy_words
+train,6400,320,320,113.9375,115.5,35,180,17.190625,113.50953125,116.0,32,186,17.78953125
+valid,800,40,40,112.75,120.0,41,174,17.15,112.2425,119.0,38,180,17.74875
+test,800,40,40,122.25,122.0,39,178,18.175,121.69625,121.0,38,185,18.77625

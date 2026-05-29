@@ -1,0 +1,11 @@
+\begin{tabular}{p{0.22\linewidth}p{0.32\linewidth}p{0.34\linewidth}}
+\toprule
+Noise type & Description & Motivation \\
+\midrule
+Character substitution & A character is replaced by another visually or script-related character. & Models OCR confusions between similar Arabic-script shapes. \\
+Character deletion & A character is removed from the clean line. & Models missed glyphs, weak ink, scan noise, or segmentation loss. \\
+Character insertion & An extra character is inserted into the line. & Models spurious OCR glyphs and over-segmentation. \\
+Whitespace split/merge & Spaces may be inserted inside words or removed between tokens. & Models word-boundary errors in cursive OCR. \\
+Arabic/Persian form confusion & Alternative forms of related Arabic-script characters are introduced. & Models mixed Arabic, Persian and Ottoman conventions. \\
+\bottomrule
+\end{tabular}

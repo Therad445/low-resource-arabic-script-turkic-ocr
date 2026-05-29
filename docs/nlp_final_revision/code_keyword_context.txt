@@ -1,0 +1,177 @@
+src/postcorrection/entity_eval.py:17: python src/entity_eval.py --predictions results/byt5_predictions.csv --entities data/entity_list.csv --out results/entity_metrics.csv
+src/postcorrection/noise_generator.py:2: Synthetic OCR-like noise generator for Arabic-script texts.
+src/postcorrection/noise_generator.py:45: class NoiseConfig:
+src/postcorrection/noise_generator.py:51:     normalize_confusion_prob: float = 0.04
+src/postcorrection/noise_generator.py:72: def inject_noise(
+src/postcorrection/noise_generator.py:73:     text: str, config: NoiseConfig | None = None, rng: random.Random | None = None
+src/postcorrection/noise_generator.py:76:     config = config or NoiseConfig()
+src/postcorrection/noise_generator.py:96:         if ch in NORMALIZATION_CONFUSIONS and rng.random() < config.normalize_confusion_prob:
+src/postcorrection/noise_generator.py:118:         variants.append(inject_noise(text, rng=rng))
+src/postcorrection/predict_byt5.py:2: Generate corrections with a fine-tuned ByT5/mT5 model.
+src/postcorrection/predict_byt5.py:5: python src/predict_byt5.py --model_dir models/byt5-small-ocr --test data/processed/test.csv --out results/byt5_predictions.csv
+src/postcorrection/predict_byt5.py:15: from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+src/postcorrection/predict_byt5.py:30:     model = AutoModelForSeq2SeqLM.from_pretrained(str(args.model_dir)).to(device)
+src/postcorrection/train_byt5.py:2: Fine-tune ByT5-small for OCR post-correction.
+src/postcorrection/train_byt5.py:5: python src/train_byt5.py \
+src/postcorrection/train_byt5.py:8:   --output_dir models/byt5-small-ocr \
+src/postcorrection/train_byt5.py:11: For weak laptops, use fewer epochs and small batch size.
+src/postcorrection/train_byt5.py:20: from transformers import (
+src/postcorrection/train_byt5.py:21:     AutoModelForSeq2SeqLM,
+src/postcorrection/train_byt5.py:23:     DataCollatorForSeq2Seq,
+src/postcorrection/train_byt5.py:24:     Seq2SeqTrainer,
+src/postcorrection/train_byt5.py:25:     Seq2SeqTrainingArguments,
+src/postcorrection/train_byt5.py:42:     parser.add_argument("--model_name", type=str, default="google/byt5-small")
+src/postcorrection/train_byt5.py:51:     model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name)
+src/postcorrection/train_byt5.py:73:     training_args = Seq2SeqTrainingArguments(
+src/postcorrection/train_byt5.py:89:     collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
+src/postcorrection/train_byt5.py:91:     trainer = Seq2SeqTrainer(
+src/postcorrection/train_byt5.py:100:     trainer.train()
+src/postcorrection/train_byt5.py:101:     trainer.save_model(str(args.output_dir))
+src/postcorrection/evaluate.py:9: python src/evaluate.py --predictions results/byt5_predictions.csv --text_col prediction --target_col clean --out results/byt5_metrics.csv
+src/postcorrection/evaluate.py:20: def levenshtein(a: list[str] | str, b: list[str] | str) -> int:
+src/postcorrection/evaluate.py:21:     """Classic dynamic-programming Levenshtein distance."""
+src/postcorrection/evaluate.py:45: def cer(pred: str, ref: str) -> float:
+src/postcorrection/evaluate.py:48:     return levenshtein(pred, ref) / len(ref)
+src/postcorrection/evaluate.py:51: def wer(pred: str, ref: str) -> float:
+src/postcorrection/evaluate.py:56:     return levenshtein(pred_words, ref_words) / len(ref_words)
+src/postcorrection/evaluate.py:59: def exact_match(pred: str, ref: str) -> float:
+src/postcorrection/evaluate.py:68:         "CER": sum(cer(p, r) for p, r in zip(preds, refs, strict=True)) / len(refs),
+src/postcorrection/evaluate.py:69:         "WER": sum(wer(p, r) for p, r in zip(preds, refs, strict=True)) / len(refs),
+src/postcorrection/evaluate.py:70:         "ExactMatch": sum(exact_match(p, r) for p, r in zip(preds, refs, strict=True)) / len(refs),
+src/postcorrection/normalize.py:2: Rule-based Persian/Arabic-script normalizer baseline.
+src/postcorrection/normalize.py:28: def normalize_arabic_script(text: str) -> str:
+src/postcorrection/normalize.py:39: def identity(text: str) -> str:
+src/postcorrection/run_baselines.py:2: Run identity and rule-based baselines.
+src/postcorrection/run_baselines.py:5: python src/run_baselines.py --test data/processed/test.csv --out results/baseline_predictions.csv --metrics results/baseline_metrics.csv
+src/postcorrection/run_baselines.py:16: from src.postcorrection.normalize import identity, normalize_arabic_script
+src/postcorrection/run_baselines.py:27:     df["identity_prediction"] = df["noisy"].fillna("").astype(str).map(identity)
+src/postcorrection/run_baselines.py:28:     df["rule_prediction"] = df["noisy"].fillna("").astype(str).map(normalize_arabic_script)
+src/postcorrection/run_baselines.py:35:         ("Identity baseline", "identity_prediction"),
+src/postcorrection/run_baselines.py:36:         ("Rule-based normalizer", "rule_prediction"),
+src/postcorrection/run_baselines.py:42:     metrics_df = pd.DataFrame(rows)[["method", "CER", "WER", "ExactMatch", "N"]]
+src/postcorrection/make_dataset.py:22: from src.postcorrection.noise_generator import NoiseConfig, inject_noise
+src/postcorrection/make_dataset.py:39:     config = NoiseConfig()
+src/postcorrection/make_dataset.py:43:             noisy = inject_noise(clean, config=config, rng=rng)
+src/models/trainer.py:4: # Placeholder trainer: real training comes later.
+src/models/trainer.py:5: class Trainer:
+src/models/baseline.py:5: class BaselineModel:
+src/metrics/wer.py:4: def wer(ref: str, hyp: str) -> float:
+src/metrics/wer.py:14:     # Here we do list-based DP by converting to tuple and using _levenshtein on serialized tokens.
+src/metrics/wer.py:17:     return _levenshtein_list(ref_words, hyp_words) / float(len(ref_words))
+src/metrics/wer.py:20: def _levenshtein_list(a: list[str], b: list[str]) -> int:
+src/metrics/cer.py:4: def _levenshtein(a: str, b: str) -> int:
+src/metrics/cer.py:25: def cer(ref: str, hyp: str) -> float:
+src/metrics/cer.py:34:     return _levenshtein(ref, hyp) / float(len(ref))
+src/data/transforms.py:3: # Placeholder: later add image preprocessing steps (deskew/denoise/contrast)
+src/data/transforms.py:4: def identity(x):
+src/data/manifest.py:18:     "transcription_normalized",
+src/data/manifest.py:32:     transcription_normalized: str = ""
+src/data/manifest.py:46:     suffix = Path(path).suffix.lower()
+src/data/normalization.py:22: def normalize_text_v1(text: str) -> str:
+src/data/normalization.py:25:     This function intentionally avoids script-specific substitutions. It only:
+src/data/normalization.py:30:     normalized = unicodedata.normalize("NFC", text or "")
+src/data/normalization.py:32:         normalized = normalized.replace(ch, "")
+src/data/normalization.py:33:     normalized = " ".join(normalized.split())
+src/data/normalization.py:34:     return normalized.strip()
+scripts/export_subset.py:9:     suffix = path.suffix.lower()
+scripts/validate_manifest.py:8: from src.data.normalization import normalize_text_v1
+scripts/validate_manifest.py:34:     non_normalized: list[str] = []
+scripts/validate_manifest.py:50:         elif Path(record.image_relpath).suffix.lower() not in ALLOWED_IMAGE_SUFFIXES:
+scripts/validate_manifest.py:53:         if normalize_text_v1(record.transcription_diplomatic) != record.transcription_diplomatic:
+scripts/validate_manifest.py:54:             non_normalized.append(record.line_id)
+scripts/validate_manifest.py:87:     if non_normalized:
+scripts/validate_manifest.py:88:         print(f"[INFO] Transcriptions changed by normalize_text_v1: {len(non_normalized)}")
+scripts/validate_manifest.py:89:         for value in non_normalized[: args.show_examples]:
+scripts/make_doc_splits.py:133:         print("[INFO] Fewer than 3 documents: a full train/dev/test split is impossible.")
+scripts/evaluate.py:7: from src.metrics.cer import cer
+scripts/evaluate.py:8: from src.metrics.wer import wer
+scripts/evaluate.py:28:     cers = [cer(gt_text, pred_text) for _, _, gt_text, pred_text in pairs]
+scripts/evaluate.py:29:     wers = [wer(gt_text, pred_text) for _, _, gt_text, pred_text in pairs]
+scripts/evaluate.py:32:     print(f"CER mean: {mean(cers):.4f}")
+scripts/evaluate.py:33:     print(f"WER mean: {mean(wers):.4f}")
+scripts/postcorrection_error_analysis.py:11:     """Levenshtein edit distance with O(min(n, m)) memory."""
+scripts/postcorrection_error_analysis.py:29: def cer(hypothesis: str, reference: str) -> float:
+scripts/postcorrection_error_analysis.py:36: def wer(hypothesis: str, reference: str) -> float:
+scripts/postcorrection_error_analysis.py:78:         cer_noisy = cer(noisy, clean)
+scripts/postcorrection_error_analysis.py:79:         cer_prediction = cer(pred, clean)
+scripts/postcorrection_error_analysis.py:80:         wer_noisy = wer(noisy, clean)
+scripts/postcorrection_error_analysis.py:81:         wer_prediction = wer(pred, clean)
+scripts/postcorrection_error_analysis.py:89:                 "cer_noisy": cer_noisy,
+scripts/postcorrection_error_analysis.py:90:                 "cer_prediction": cer_prediction,
+scripts/postcorrection_error_analysis.py:91:                 "cer_improvement": cer_noisy - cer_prediction,
+scripts/postcorrection_error_analysis.py:92:                 "wer_noisy": wer_noisy,
+scripts/postcorrection_error_analysis.py:93:                 "wer_prediction": wer_prediction,
+scripts/postcorrection_error_analysis.py:94:                 "wer_improvement": wer_noisy - wer_prediction,
+scripts/postcorrection_error_analysis.py:103:     analysis_path = out_dir / "byt5_512_error_analysis.csv"
+scripts/postcorrection_error_analysis.py:104:     best_path = out_dir / "byt5_512_best_examples.csv"
+scripts/postcorrection_error_analysis.py:105:     worst_path = out_dir / "byt5_512_worst_examples.csv"
+scripts/postcorrection_error_analysis.py:106:     summary_path = out_dir / "byt5_512_error_summary.csv"
+scripts/postcorrection_error_analysis.py:111:         ["cer_improvement", "wer_improvement"],
+scripts/postcorrection_error_analysis.py:117:         ["cer_improvement", "wer_improvement"],
+scripts/postcorrection_error_analysis.py:126:                 "mean_cer_noisy": analysis["cer_noisy"].mean(),
+scripts/postcorrection_error_analysis.py:127:                 "mean_cer_prediction": analysis["cer_prediction"].mean(),
+scripts/postcorrection_error_analysis.py:128:                 "mean_cer_improvement": analysis["cer_improvement"].mean(),
+scripts/postcorrection_error_analysis.py:129:                 "mean_wer_noisy": analysis["wer_noisy"].mean(),
+scripts/postcorrection_error_analysis.py:130:                 "mean_wer_prediction": analysis["wer_prediction"].mean(),
+scripts/postcorrection_error_analysis.py:131:                 "mean_wer_improvement": analysis["wer_improvement"].mean(),
+scripts/postcorrection_error_analysis.py:132:                 "improved_by_cer_count": int((analysis["cer_improvement"] > 0).sum()),
+scripts/postcorrection_error_analysis.py:133:                 "unchanged_by_cer_count": int((analysis["cer_improvement"] == 0).sum()),
+scripts/postcorrection_error_analysis.py:134:                 "worse_by_cer_count": int((analysis["cer_improvement"] < 0).sum()),
+scripts/postcorrection_error_analysis.py:135:                 "improved_by_wer_count": int((analysis["wer_improvement"] > 0).sum()),
+scripts/postcorrection_error_analysis.py:136:                 "unchanged_by_wer_count": int((analysis["wer_improvement"] == 0).sum()),
+scripts/postcorrection_error_analysis.py:137:                 "worse_by_wer_count": int((analysis["wer_improvement"] < 0).sum()),
+scripts/validate_pilot_lines.py:8: from src.data.normalization import normalize_text_v1
+scripts/validate_pilot_lines.py:32:     "transcription_normalized",
+scripts/validate_pilot_lines.py:108:     non_normalized_diplomatic: list[str] = []
+scripts/validate_pilot_lines.py:109:     non_normalized_normalized: list[str] = []
+scripts/validate_pilot_lines.py:139:         elif Path(row["image_relpath"]).suffix.lower() not in ALLOWED_IMAGE_SUFFIXES:
+scripts/validate_pilot_lines.py:150:         if normalize_text_v1(row["transcription_diplomatic"]) != row["transcription_diplomatic"]:
+scripts/validate_pilot_lines.py:151:             non_normalized_diplomatic.append(line_id)
+scripts/validate_pilot_lines.py:153:         if row["transcription_normalized"]:
+scripts/validate_pilot_lines.py:155:                 normalize_text_v1(row["transcription_normalized"])
+scripts/validate_pilot_lines.py:156:                 != row["transcription_normalized"]
+scripts/validate_pilot_lines.py:158:                 non_normalized_normalized.append(line_id)
+scripts/validate_pilot_lines.py:207:     if non_normalized_diplomatic:
+scripts/validate_pilot_lines.py:209:             f"[INFO] diplomatic transcription changes under normalize_text_v1: "
+scripts/validate_pilot_lines.py:210:             f"{len(non_normalized_diplomatic)}"
+scripts/validate_pilot_lines.py:212:         for value in non_normalized_diplomatic[: args.show_examples]:
+scripts/validate_pilot_lines.py:215:     if non_normalized_normalized:
+scripts/validate_pilot_lines.py:217:             f"[INFO] normalized transcription changes under normalize_text_v1: "
+scripts/validate_pilot_lines.py:218:             f"{len(non_normalized_normalized)}"
+scripts/validate_pilot_lines.py:220:         for value in non_normalized_normalized[: args.show_examples]:
+scripts/build_pilot_manifest.py:7: from src.data.normalization import normalize_text_v1
+scripts/build_pilot_manifest.py:31:     "transcription_normalized",
+scripts/build_pilot_manifest.py:45:     "transcription_normalized",
+scripts/build_pilot_manifest.py:136:         diplomatic = normalize_text_v1(row["transcription_diplomatic"])
+scripts/build_pilot_manifest.py:137:         normalized = normalize_text_v1(row["transcription_normalized"] or diplomatic)
+scripts/build_pilot_manifest.py:147:                 "transcription_normalized": normalized,
+scripts/corpus_stats.py:13:     delimiter = "\t" if path.suffix.lower() == ".tsv" else ","
+scripts/error_analysis.py:8: from src.metrics.cer import cer
+scripts/error_analysis.py:27:         scored.append((cer(gt_text, pred_text), image_id, image_path, gt_text, pred_text))
+scripts/error_analysis.py:33:     lines = ["cer\timage_id\timage_path\tgt\tpred"]
+scripts/validate_gt.py:8: from src.data.normalization import INVISIBLE_FORMATTING_MARKS, normalize_text_v1
+scripts/validate_gt.py:46:         elif Path(row.image_path).suffix.lower() not in ALLOWED_IMAGE_SUFFIXES:
+scripts/validate_gt.py:53:         normalized = normalize_text_v1(row.text)
+scripts/validate_gt.py:54:         if normalized != row.text:
+scripts/validate_gt.py:55:             changed_norm.append((row.image_id, row.text, normalized))
+scripts/validate_gt.py:94:         for image_id, raw, normalized in changed_norm[: args.show_examples]:
+scripts/validate_gt.py:97:             print("NORM:", normalized)
+scripts/run_eval.py:9: from src.metrics.cer import cer
+scripts/run_eval.py:10: from src.metrics.wer import wer
+scripts/run_eval.py:18:     ap.add_argument("--exp_dir", required=True, help="e.g., experiments/2026-01-17_baseline0_print")
+scripts/run_eval.py:19:     ap.add_argument("--tag", default="baseline", help="short tag to store in metrics.json")
+scripts/run_eval.py:35:     cers = [cer(gt_text, pred_text) for _, _, gt_text, pred_text in pairs]
+scripts/run_eval.py:36:     wers = [wer(gt_text, pred_text) for _, _, gt_text, pred_text in pairs]
+scripts/run_eval.py:42:         "cer_mean": float(mean(cers)),
+scripts/run_eval.py:43:         "wer_mean": float(mean(wers)),
+scripts/run_eval.py:66:     print(f"CER mean: {metrics['cer_mean']:.4f}")
+scripts/run_eval.py:67:     print(f"WER mean: {metrics['wer_mean']:.4f}")
+configs/eval.yaml:10:   metrics: [cer, wer]
+configs/baseline.yaml:3:   run_name: baseline
+configs/baseline.yaml:10:   metrics: [cer, wer]
+experiments/README.md:9: - `metrics.json` — CER/WER and any other metrics
+experiments/2026-01-17_toy_sanity/notes.md:3: Purpose: verify parsing + alignment + CER/WER computation.
+experiments/2026-01-17_toy_sanity/notes.md:5: This is NOT a real OCR baseline.
+experiments/2026-01-10_baseline_kraken/notes.md:1: # Baseline (kraken)
+experiments/2026-01-10_baseline_kraken/notes.md:8: - check worst CER samples
+experiments/2026-01-10_baseline_kraken/config.yaml:2: notes: baseline using default model

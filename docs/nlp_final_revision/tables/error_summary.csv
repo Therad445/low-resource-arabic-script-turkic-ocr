@@ -1,0 +1,2 @@
+n,mean_cer_noisy,mean_cer_prediction,mean_cer_improvement,mean_wer_noisy,mean_wer_prediction,mean_wer_improvement,improved_by_cer_count,unchanged_by_cer_count,worse_by_cer_count,improved_by_wer_count,unchanged_by_wer_count,worse_by_wer_count
+800,0.08600503826475,0.0799131880005959,0.0060918502641541,0.519006150090487,0.3685396017212705,0.1504665483692166,682,60,58,677,63,60

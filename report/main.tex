@@ -83,19 +83,23 @@ The main neural approach is ByT5-small. It is fine-tuned as a sequence-to-sequen
 
 The use of a byte-level model is motivated by the low-resource and noisy nature of the task. Arabic-script characters may occupy multiple bytes, and historical spelling variation can be poorly represented by standard subword tokenizers. Therefore, sequence length is an important experimental parameter.
 
+
+
 \section{Dataset}
 
-The dataset is a pilot benchmark for OCR post-correction of Arabic-script Turkic historical text. The clean corpus was collected from an Ottoman Turkish / Arabic-script Turkic Wikisource source. Synthetic OCR-like errors were then generated to create noisy-clean pairs.
+The dataset is a pilot benchmark for OCR post-correction of Arabic-script Turkic historical text. The clean corpus was collected from an Ottoman Turkish / Arabic-script Turkic Wikisource source. The project does not use document images directly at this stage; instead, it isolates the text-level post-correction problem by generating synthetic OCR-like noisy versions of clean historical lines.
 
-Each processed CSV file contains:
+\subsection{Corpus Structure and Splits}
+
+Each processed CSV file contains four fields:
 \begin{itemize}
     \item \texttt{line\_id}: identifier of the original clean line;
-    \item \texttt{variant\_id}: identifier of the noisy variant;
+    \item \texttt{variant\_id}: identifier of the synthetic noisy variant;
     \item \texttt{noisy}: synthetically corrupted OCR-like text;
     \item \texttt{clean}: original clean text.
 \end{itemize}
 
-The split is performed by clean source lines. This prevents leakage: noisy variants of the same original line do not appear in different splits. The source description is stored in \texttt{data/postcorrection/raw/SOURCES.md}. This makes the benchmark suitable for controlled comparison of post-correction methods, although it does not replace evaluation on real OCR or HTR output.
+The split is performed by clean source lines, not by individual noisy variants. This prevents leakage: noisy variants of the same original line do not appear in different splits. This is important because otherwise the model could see almost identical versions of the same clean line during training and testing. The source description is stored in \texttt{data/postcorrection/raw/SOURCES.md}. The benchmark is suitable for controlled comparison of post-correction methods, although it does not replace evaluation on real OCR or HTR output.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -104,6 +108,73 @@ The split is performed by clean source lines. This prevents leakage: noisy varia
 \label{tab:dataset}
 \end{center}
 \end{table}
+
+\subsection{Corpus Length and Character Statistics}
+
+Table~\ref{tab:length-stats} gives a more detailed view of the corpus. The test split contains 800 noisy-clean pairs derived from 40 unique clean lines. The lines are relatively long for exact sequence-level correction: the average clean test line has more than 120 characters and about 18 words. This helps explain why Exact Match remains low even when CER and WER improve.
+
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/dataset_length_statistics}
+\caption{Length statistics for the processed noisy-clean splits.}
+\label{tab:length-stats}
+\end{center}
+\end{table}
+
+The corpus contains a mixed Arabic-script character inventory. Table~\ref{tab:char-inventory} summarizes the number of characters, while Table~\ref{tab:top-chars} reports the most frequent non-space Unicode code points in the clean text. Unicode codes are used to keep the PDF stable and to make the character inventory unambiguous.
+
+\begin{table}[tbh!]
+\begin{center}
+\input{tables/character_inventory}
+\caption{Character inventory summary for clean and noisy text.}
+\label{tab:char-inventory}
+\end{center}
+\end{table}
+
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/top_character_codes}
+\caption{Most frequent non-space Unicode code points in the clean corpus.}
+\label{tab:top-chars}
+\end{center}
+\end{table}
+
+\subsection{Synthetic OCR-like Noise}
+
+The benchmark uses synthetic noise to simulate common text-level OCR errors. The noise generator is intended to create a controlled post-correction benchmark rather than a fully realistic OCR system. Table~\ref{tab:noise-taxonomy} summarizes the main types of corruptions represented by the generator and observed in the noisy-clean pairs.
+
+\begin{table}[tbh!]
+\begin{center}
+\small
+\input{tables/synthetic_noise_taxonomy}
+\caption{Synthetic OCR-like noise taxonomy used in the benchmark.}
+\label{tab:noise-taxonomy}
+\end{center}
+\end{table}
+
+Table~\ref{tab:noise-delta} gives an approximate quantitative view of the noise on the test split. Length deltas cannot fully describe OCR errors, because substitutions may preserve length, but they help distinguish deletion/insertion-heavy corruption from purely substitutional corruption.
+
+\begin{table}[tbh!]
+\begin{center}
+\input{tables/noise_length_delta_summary}
+\caption{Approximate noisy-clean length-delta statistics on the test split.}
+\label{tab:noise-delta}
+\end{center}
+\end{table}
+
+\subsection{Dataset Examples}
+
+Figure~\ref{fig:dataset-examples} shows representative noisy-clean pairs from the test split. The full examples are also stored in the repository under \texttt{docs/nlp\_final\_revision/samples/}. The examples illustrate character substitutions, missing or inserted characters, and word-boundary distortions.
+
+\begin{figure}[tbh!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/dataset_examples.png}
+    \caption{Examples of synthetic noisy-clean pairs from the test split.}
+    \label{fig:dataset-examples}
+\end{figure}
+
 
 \section{Experiments}
 

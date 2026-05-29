@@ -1,0 +1,2 @@
+split,mean_len_delta,median_len_delta,mean_abs_len_delta,share_shorter_noisy,share_equal_length,share_longer_noisy,mean_word_delta
+test,-0.55375,0.0,1.92875,0.49375,0.1875,0.31875,0.60125
