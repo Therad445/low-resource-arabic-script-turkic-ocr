@@ -30,3 +30,8 @@ Instructor feedback:
 ## Expected effect
 
 The revision directly addresses the main reasons for point loss. It should be substantially stronger for the Related Work, Dataset and Model/Experiments criteria.
+
+
+## Final consistency polish
+
+After adding the train-derived character-confusion baseline, the abstract, introduction, experimental protocol and conclusion were updated so that the report consistently states that four methods are compared.

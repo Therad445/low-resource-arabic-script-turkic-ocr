@@ -4,10 +4,10 @@ Step & Description \\
 \midrule
 Data preparation & Clean historical lines are converted into synthetic noisy-clean pairs. \\
 Splitting & The split is performed by clean source line to avoid leakage between train, validation and test. \\
-Baseline evaluation & Identity and rule-based baselines are applied directly to the test split. \\
+Baseline evaluation & Identity, rule-based and train-derived character-confusion baselines are applied to the test split. \\
 Neural training & ByT5-small is fine-tuned on the training split using noisy lines as inputs and clean lines as targets. \\
 Model selection & The final reported configuration is the 512-token, 2-epoch ByT5-small run stored in the repository artifacts. \\
-Final evaluation & All methods are evaluated on the same held-out test split of 800 examples. \\
+Final evaluation & All four methods are evaluated on the same held-out test split of 800 examples. \\
 Error analysis & Per-example CER and WER are compared against the noisy input to count improvements and degradations. \\
 \bottomrule
 \end{tabular}

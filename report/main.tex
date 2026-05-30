@@ -20,7 +20,7 @@
 \maketitle
 
 \begin{abstract}
-This project studies OCR post-correction for historical Turkic texts written in Arabic script. We formulate the problem as a sequence-to-sequence NLP task: given a noisy OCR-like text line, the system should generate its clean version. We collect a small Arabic-script Turkic corpus, construct a synthetic noisy-clean benchmark, compare identity and rule-based baselines with a ByT5-small model, and evaluate the results with Character Error Rate (CER), Word Error Rate (WER), and Exact Match. On the proposed benchmark, ByT5-small with a 512-token sequence length achieves the best CER and WER among the evaluated methods. The project code is available at: \url{https://github.com/Therad445/low-resource-arabic-script-turkic-ocr}.
+This project studies OCR post-correction for historical Turkic texts written in Arabic script. We formulate the problem as a sequence-to-sequence NLP task: given a noisy OCR-like text line, the system should generate its clean version. We collect a small Arabic-script Turkic corpus, construct a synthetic noisy-clean benchmark, compare identity, rule-based, train-derived character-confusion, and ByT5-small approaches, and evaluate the results with Character Error Rate (CER), Word Error Rate (WER), and Exact Match. On the proposed benchmark, ByT5-small with a 512-token sequence length achieves the best CER and WER among the four evaluated methods. The project code is available at: \url{https://github.com/Therad445/low-resource-arabic-script-turkic-ocr}.
 \end{abstract}
 
 \section{Introduction}
@@ -37,7 +37,7 @@ The main contributions are:
     \item a small reproducible benchmark for Arabic-script Turkic OCR post-correction;
     \item a synthetic OCR-like noise generation protocol;
     \item a clean-line-level train/validation/test split without leakage;
-    \item comparison of identity, rule-based and neural sequence-to-sequence approaches;
+    \item comparison of identity, rule-based, train-derived character-confusion and neural sequence-to-sequence approaches;
     \item evaluation with CER, WER and Exact Match;
     \item per-sample error analysis of model improvements and degradations.
 \end{itemize}
@@ -280,7 +280,7 @@ Exact Match is the fraction of examples where the predicted line exactly matches
 
 \subsection{Experimental Protocol}
 
-All methods are evaluated on the same held-out test split. The split is leakage-safe because it is based on clean source lines rather than noisy variants. The identity and rule-based baselines are evaluated directly on the test set. The ByT5-small model is fine-tuned on the training split and evaluated on the test split.
+All methods are evaluated on the same held-out test split. The split is leakage-safe because it is based on clean source lines rather than noisy variants. The identity, rule-based and train-derived character-confusion baselines are evaluated on the test set. The ByT5-small model is fine-tuned on the training split and evaluated on the same held-out test split.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -377,7 +377,7 @@ The current benchmark is intentionally limited. First, the corpus is small and c
 
 \section{Conclusion}
 
-This project introduced a reproducible pilot benchmark for OCR post-correction of low-resource Arabic-script Turkic historical text. We collected a small clean corpus, generated synthetic OCR-like noisy-clean pairs, created a train/validation/test split without clean-line leakage, and compared identity, rule-based and ByT5-small approaches.
+This project introduced a reproducible pilot benchmark for OCR post-correction of low-resource Arabic-script Turkic historical text. We collected a small clean corpus, generated synthetic OCR-like noisy-clean pairs, created a train/validation/test split without clean-line leakage, and compared identity, rule-based, train-derived character-confusion and ByT5-small approaches.
 
 The ByT5-small 512-token configuration achieved the best CER and WER among the evaluated methods on the proposed benchmark. At the same time, the experiment has important limitations: the corpus is small, the current data comes from one main source, errors are synthetic, and real OCR/HTR outputs should be added in future work. The project therefore represents a reproducible pilot study and a foundation for future work rather than a finished OCR system.
 
