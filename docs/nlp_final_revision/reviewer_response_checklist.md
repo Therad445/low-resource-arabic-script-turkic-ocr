@@ -18,12 +18,13 @@ Instructor feedback:
 | Model description was too general | Added formal task formulation, pipeline components, detailed baseline descriptions and ByT5 explanation | Section 3 |
 | Experiments were too brief | Added experimental protocol, reproducibility artifacts, hyperparameter table and limitations of experimental setup | Section 5 |
 | Results interpretation was short | Added metric-level interpretation, rule-based failure analysis and explicit limited SotA claim | Section 6 |
+| Small number of approaches | Added a train-derived character confusion baseline as an additional data-driven non-neural method | `src/postcorrection/run_char_confusion_baseline.py`, Section 3, Table of results |
 
 ## Remaining honest limitations
 
 - The benchmark is still small.
 - The noise is synthetic, not real OCR/HTR output.
-- Only three approaches are evaluated.
+- Four approaches are evaluated, but the benchmark still needs more neural architectures and real OCR/HTR outputs.
 - The work should be treated as a reproducible pilot benchmark, not as a finished OCR system.
 
 ## Expected effect

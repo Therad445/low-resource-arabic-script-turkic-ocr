@@ -3,12 +3,22 @@
 Setting & Value \\
 \midrule
 Model family & ByT5-small \\
+Pretrained checkpoint & \texttt{google/byt5-small} \\
 Task formulation & line-level sequence-to-sequence post-correction \\
 Input & noisy OCR-like text line \\
 Target & clean historical text line \\
 Maximum source length & 512 byte-level tokens \\
 Maximum target length & 512 byte-level tokens \\
 Training epochs & 2 \\
+Training batch size & 4 \\
+Learning rate & $5 \times 10^{-5}$ \\
+Weight decay & 0.01 \\
+Evaluation strategy & every epoch \\
+Save strategy & every epoch \\
+FP16 & false \\
+Generation beams & 4 \\
+Inference batch size & 8 \\
+Maximum generated tokens & 512 \\
 Training pairs & 6400 \\
 Validation pairs & 800 \\
 Test pairs & 800 \\

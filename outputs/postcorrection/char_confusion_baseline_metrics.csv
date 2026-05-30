@@ -1,0 +1,2 @@
+method,CER,WER,ExactMatch,N
+Train-derived char-confusion baseline,0.08251987710265078,0.5061886667866281,0.00125,800.0

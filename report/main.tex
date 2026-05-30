@@ -129,6 +129,13 @@ The rule-based normalizer applies simple Arabic-script normalization rules. Its 
 
 However, this baseline is intentionally limited. Historical Arabic-script Turkic orthography may preserve meaningful variation, and aggressive normalization can destroy distinctions that are important for the clean reference. Therefore, the rule-based baseline is expected to be interpretable but not necessarily strong. Its poor performance in the final results confirms that naive normalization is not sufficient for this benchmark.
 
+
+\subsection{Train-Derived Character Confusion Baseline}
+
+To add a data-driven non-neural comparison, I also evaluate a train-derived character confusion baseline. The baseline aligns noisy-clean training pairs with Levenshtein dynamic programming and estimates a conservative mapping from noisy characters to clean characters. A mapping is accepted only when the source character has enough support and the most frequent target character is sufficiently dominant. This prevents the baseline from rewriting rare characters based on weak evidence.
+
+This method is intentionally limited. It can substitute or delete existing characters, but it cannot generate a missing character from context and cannot model long-range dependencies. Its role is therefore diagnostic: it tests whether simple corpus-derived character confusions are enough, or whether a contextual sequence-to-sequence model is needed.
+
 \subsection{ByT5-small}
 
 The main neural model is ByT5-small \cite{xue2022byt5}. It is fine-tuned as an encoder-decoder sequence-to-sequence model. The encoder reads the noisy line, and the decoder generates the corrected line. The training objective is to maximize the likelihood of the clean target sequence conditioned on the noisy input sequence.
@@ -147,7 +154,7 @@ The final reported configuration uses 512-token source and target lengths and 2 
 
 \subsection{Compared Methods}
 
-Table~\ref{tab:compared-methods} summarizes the compared methods. The comparison is intentionally simple but covers three different levels of modelling complexity: no correction, rule-based correction and neural sequence-to-sequence correction.
+Table~\ref{tab:compared-methods} summarizes the compared methods. The comparison covers four levels of modelling complexity: no correction, hand-written rule-based correction, data-driven character-level correction and neural sequence-to-sequence correction.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -299,20 +306,20 @@ The repository stores both the final report and the main intermediate artifacts 
 
 \subsection{Baselines and Model Configuration}
 
-The benchmark includes two non-neural baselines and one neural model. The identity baseline is a conservative reference point. The rule-based normalizer tests whether simple Arabic-script normalization can repair the synthetic OCR-like errors. The ByT5-small model tests whether a byte-level sequence-to-sequence model can learn context-sensitive corrections.
+The benchmark includes three non-neural baselines and one neural model. The identity baseline is a conservative reference point. The rule-based normalizer tests whether simple Arabic-script normalization can repair the synthetic OCR-like errors. The train-derived character confusion baseline tests whether corpus-derived character mappings are enough. The ByT5-small model tests whether a byte-level sequence-to-sequence model can learn context-sensitive corrections.
 
 The final neural configuration is reported in Table~\ref{tab:byt5-hyperparams}. Because this is a course-scale pilot project, the experimental grid is intentionally limited. The goal is not to exhaustively tune every architecture, but to establish a reproducible benchmark and demonstrate that a byte-level neural model improves over simple baselines on this dataset.
 
 \subsection{Limitations of the Experimental Setup}
 
-The main experimental limitation is that the noisy data is synthetic. This makes the benchmark controlled and reproducible, but it does not fully reproduce real OCR or HTR error distributions. Another limitation is the small number of evaluated methods. The current comparison is sufficient to show that naive normalization is not enough and that ByT5-small is a stronger post-correction method, but future work should add more architectures, real OCR outputs, multiple random seeds and more extensive hyperparameter search.
+The main experimental limitation is that the noisy data is synthetic. This makes the benchmark controlled and reproducible, but it does not fully reproduce real OCR or HTR error distributions. Another limitation is the still modest number of evaluated methods. The current comparison includes identity, hand-written rule-based, train-derived character-confusion and neural sequence-to-sequence approaches, but future work should add more architectures, real OCR outputs, multiple random seeds and more extensive hyperparameter search.
 
 
 
 \section{Results}
 \label{sec:results}
 
-Table~\ref{tab:results} reports the final test-set results. The ByT5-small 512-token model achieves the best CER and WER among the evaluated methods on the proposed benchmark. The rule-based normalizer performs worse than the identity baseline. This is an important result: it shows that simple character normalization is not a safe post-correction strategy for this material.
+Table~\ref{tab:results} reports the final test-set results. The ByT5-small 512-token model achieves the best CER and WER among the evaluated methods on the proposed benchmark. The non-neural baselines are useful diagnostically: the rule-based normalizer tests hand-written normalization, while the train-derived character confusion baseline tests whether corpus-derived character mappings are sufficient.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -324,7 +331,7 @@ Table~\ref{tab:results} reports the final test-set results. The ByT5-small 512-t
 
 \subsection{Metric-Level Interpretation}
 
-The identity baseline has CER $0.086005$ and WER $0.519006$. This means that the synthetic OCR-like noise is not catastrophic at the character level, but it still damages word-level structure substantially. The rule-based normalizer increases both CER and WER, which suggests that naive normalization changes many characters that should remain unchanged in the clean historical reference.
+The identity baseline has CER $0.086005$ and WER $0.519006$. This means that the synthetic OCR-like noise is not catastrophic at the character level, but it still damages word-level structure substantially. The rule-based normalizer increases both CER and WER, which suggests that naive normalization changes many characters that should remain unchanged in the clean historical reference. The train-derived character confusion baseline provides an additional data-driven non-neural comparison and shows whether local character mappings alone can close the gap to a contextual neural model.
 
 ByT5-small improves CER from $0.086005$ to $0.079913$ and WER from $0.519006$ to $0.368540$. The WER improvement is stronger than the CER improvement. This suggests that the neural model often restores word-level structure even when it does not exactly recover every character. Exact Match remains low for all methods because the test examples are long: a single remaining character error makes the whole line fail exact matching.
 
@@ -361,7 +368,7 @@ In addition to aggregate metrics, we inspected individual examples. Table~\ref{t
 
 \subsection{SotA Claim on the Proposed Benchmark}
 
-Since this benchmark is newly constructed in the project, there is no previously published result on exactly the same dataset and task. Therefore, the SotA claim is intentionally limited: ByT5-small 512 is the best-performing method among the evaluated approaches on the proposed benchmark. The project does not claim global state of the art for OCR post-correction in general.
+Since this benchmark is newly constructed in the project, there is no previously published result on exactly the same dataset and task. Therefore, the SotA claim is intentionally limited: ByT5-small 512 is the best-performing method among the evaluated approaches on the proposed benchmark, including identity, hand-written rule-based and train-derived character-confusion baselines. The project does not claim global state of the art for OCR post-correction in general.
 
 
 \section{Limitations}
