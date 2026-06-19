@@ -73,7 +73,7 @@ def build_mapping(train_df, min_count=5, min_ratio=0.65):
     noisy_values = train_df["noisy"].fillna("").astype(str).tolist()
     clean_values = train_df["clean"].fillna("").astype(str).tolist()
 
-    for noisy, clean in zip(noisy_values, clean_values):
+    for noisy, clean in zip(noisy_values, clean_values, strict=True):
         for src_ch, tgt_ch in levenshtein_alignment(noisy, clean):
             if src_ch == EMPTY:
                 continue
