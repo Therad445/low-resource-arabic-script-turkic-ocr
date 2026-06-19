@@ -101,7 +101,9 @@ def build_mapping(train_df, min_count=5, min_ratio=0.65):
                 "ratio": ratio,
                 "accepted": accepted,
                 "source_unicode": "U+" + format(ord(src_ch), "04X"),
-                "target_unicode": "EMPTY" if best_tgt == EMPTY else "U+" + format(ord(best_tgt), "04X"),
+                "target_unicode": "EMPTY"
+                if best_tgt == EMPTY
+                else "U+" + format(ord(best_tgt), "04X"),
             }
         )
 
@@ -137,8 +139,8 @@ def main():
     )
 
     out_df = test_df.copy()
-    out_df["char_confusion_prediction"] = out_df["noisy"].fillna("").astype(str).map(
-        lambda s: apply_mapping(s, mapping)
+    out_df["char_confusion_prediction"] = (
+        out_df["noisy"].fillna("").astype(str).map(lambda s: apply_mapping(s, mapping))
     )
 
     metrics = evaluate_dataframe(
