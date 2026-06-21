@@ -1,129 +1,136 @@
-# Low-resource Arabic-script Turkic OCR
+# Low-resource Arabic-script Turkic OCR Post-Correction
 
 ![CI](https://github.com/Therad445/low-resource-arabic-script-turkic-ocr/actions/workflows/ci.yml/badge.svg)
 
-Research repository for low-resource OCR/HTR and OCR post-correction experiments on historical Turkic texts written in Arabic script.
+This repository contains a reproducible pilot project for **line-level OCR post-correction of low-resource Arabic-script Turkic historical texts**.
 
-The current main result is a reproducible pilot for OCR post-correction of Arabic-script Turkic text: corpus collection, synthetic noisy/clean dataset construction, baseline evaluation, ByT5-small fine-tuning, metrics, and error analysis.
-
-
-
-## NLP Course Final Project
-
-This repository contains the NLP-course final project **A Reproducible Benchmark for OCR Post-Correction of Low-Resource Arabic-Script Turkic Historical Texts**.
-
-The project studies OCR post-correction as a sequence-to-sequence NLP task:
+The current project is not a full image-based OCR/HTR system. It focuses on the post-correction stage:
 
 ```text
 noisy OCR-like Arabic-script Turkic text -> clean historical text
 ```
 
-Main submission artifacts:
-
-- project landing page: [`NLP_FINAL_PROJECT.md`](NLP_FINAL_PROJECT.md);
-- final PDF report: [`report/final_report.pdf`](report/final_report.pdf);
-- LaTeX report source: [`report/main.tex`](report/main.tex);
-- dataset card: [`DATASET_CARD.md`](DATASET_CARD.md);
-- model card: [`MODEL_CARD.md`](MODEL_CARD.md);
-- reproduction guide: [`REPRODUCE.md`](REPRODUCE.md).
-
-Main result on the proposed benchmark:
-
-| Method | CER ↓ | WER ↓ | Exact Match ↑ | N |
-|---|---:|---:|---:|---:|
-| Identity baseline | 0.086005 | 0.519006 | 0.001250 | 800 |
-| Rule-based normalizer | 0.151932 | 0.684408 | 0.000000 | 800 |
-| **ByT5-small 512 / 2 epochs** | **0.079913** | **0.368540** | **0.003750** | 800 |
-
-Safe claim: ByT5-small 512 achieves the best CER/WER among evaluated methods on the proposed benchmark. This is a pilot post-correction benchmark, not a full image-based OCR/HTR system.
+The main goal is to build a controlled benchmark, compare simple and neural baselines, analyze errors, and prepare the project for a stronger real-OCR/HTR validation stage.
 
 ## Current status
 
-The repository currently contains two connected layers:
+The project currently includes:
 
-1. General OCR/HTR research scaffold for historical Arabic-script Turkic documents.
-2. A completed post-correction pilot used as the technical basis for the course paper draft.
-
-The post-correction pilot includes:
-
-- Ottoman Turkish / Arabic-script Turkic corpus collection from Arabic Wikisource;
-- 400 collected clean text blocks;
-- synthetic OCR-like noisy/clean pair generation;
+- Arabic-script Turkic / Ottoman Turkish clean text collection;
+- synthetic OCR-like noisy-clean benchmark construction;
 - train/valid/test split without clean-line leakage;
-- identity and rule-based baseline evaluation;
-- ByT5-small 512-token experiment;
-- aggregate metrics and per-sample error analysis;
-- course paper draft and polishing TODO.
+- identity baseline;
+- rule-based normalizer baseline;
+- train-derived character-confusion baseline;
+- ByT5-small 512 / 2 epochs post-correction model;
+- CER, WER and ExactMatch evaluation;
+- per-example error analysis;
+- whitespace sanity check for WER interpretation;
+- final Russian HSE course paper DOCX;
+- supervisor-oriented project update.
 
-## Post-correction dependencies
+## Main result
 
-The post-correction pilot has a separate runtime dependency file:
+Evaluation on the synthetic test split:
 
-```bash
-python3 -m pip install -r requirements-postcorrection.txt
-```
+| Method | CER ↓ | WER ↓ | ExactMatch ↑ | N |
+|---|---:|---:|---:|---:|
+| Identity baseline | 0.086005 | 0.519006 | 0.001250 | 800 |
+| Rule-based normalizer | 0.151932 | 0.684408 | 0.000000 | 800 |
+| Train-derived char-confusion baseline | 0.082520 | 0.506189 | 0.001250 | 800 |
+| **ByT5-small 512 / 2 epochs** | **0.079913** | **0.368540** | **0.003750** | 800 |
 
-Development and CI dependencies are listed in `requirements-dev.txt`.
+ByT5-small gives the best result among the evaluated methods on the controlled synthetic benchmark.
 
-## Main documents
+## Important interpretation
 
-- `docs/postcorrection_pilot.md` — compact technical summary of the post-correction pilot.
-- `docs/course_paper_draft.md` — current course paper draft.
-- `docs/course_paper_todo.md` — checklist for polishing, references, formatting, and final review.
-- `docs/course_paper_outline.md` — initial course paper outline.
+The result should be interpreted cautiously.
 
-## Post-correction data
+This project does **not** claim:
 
-Raw collected corpus:
+- global state of the art for OCR post-correction;
+- solved OCR/HTR for Arabic-script Turkic historical documents;
+- validated performance on real scanned archive pages.
 
-- `data/postcorrection/raw/arabic_turkic_clean_text.txt`
-- `data/postcorrection/raw/SOURCES.md`
+The current result shows that ByT5-small can improve line-level synthetic OCR-like noisy text under a controlled benchmark.
 
-Processed dataset:
+A separate whitespace sanity check was added because WER is sensitive to synthetic whitespace and word-boundary noise.
 
-- `data/postcorrection/processed/train.csv`
-- `data/postcorrection/processed/valid.csv`
-- `data/postcorrection/processed/test.csv`
-- `data/postcorrection/processed/dataset_stats.csv`
+Key sanity-check findings:
 
-Dataset summary:
+| Check | Value |
+|---|---:|
+| Raw WER improvement | 0.159354 |
+| Raw CER improvement | 0.013507 |
+| No-space CER improvement | 0.010374 |
+| WER improved but no-space CER did not improve | 9.50% |
 
-| Split | Clean lines | Noisy-clean pairs |
+Conclusion: the large WER reduction is partly amplified by whitespace / word-boundary correction, but it is not only a whitespace artifact. The model also improves non-whitespace character-level quality.
+
+## Dataset summary
+
+The processed benchmark contains:
+
+| Split | Unique clean lines | Noisy-clean pairs |
 |---|---:|---:|
 | train | 320 | 6400 |
 | valid | 40 | 800 |
 | test | 40 | 800 |
 
-## Post-correction results
+The split is performed by original clean lines. No noisy variants of the same clean line appear across different splits.
 
-Evaluation on the Arabic-script Turkic test split:
+## Main files
 
-| Method | CER | WER | ExactMatch | N |
-|---|---:|---:|---:|---:|
-| Identity baseline | 0.086005 | 0.519006 | 0.001250 | 800 |
-| Rule-based normalizer | 0.151932 | 0.684408 | 0.000000 | 800 |
-| ByT5-small 512 / 2 epochs | 0.079913 | 0.368540 | 0.003750 | 800 |
+### Project documentation
 
-Per-sample error analysis for ByT5-small 512:
+- [`docs/supervisor_update_june2026.md`](docs/supervisor_update_june2026.md) — compact project status for supervisor discussion.
+- [`docs/research_roadmap.md`](docs/research_roadmap.md) — next research steps.
+- [`DATASET_CARD.md`](DATASET_CARD.md) — dataset description and limitations.
+- [`MODEL_CARD.md`](MODEL_CARD.md) — model, baselines, metrics and risks.
+- [`REPRODUCE.md`](REPRODUCE.md) — reproduction guide.
 
-| Criterion | Improved | Unchanged | Worse | Total |
-|---|---:|---:|---:|---:|
-| CER | 682 | 60 | 58 | 800 |
-| WER | 677 | 63 | 60 | 800 |
+### Course paper
 
-## Key scripts
+- [`docs/course_paper_final.md`](docs/course_paper_final.md) — final course paper source in Markdown.
+- [`docs/course_paper_hse_export.md`](docs/course_paper_hse_export.md) — HSE DOCX export Markdown source.
+- [`outputs/course_paper_hse_final.docx`](outputs/course_paper_hse_final.docx) — final Russian HSE course paper DOCX.
 
-Corpus collection:
+### NLP final revision artifacts
 
-```bash
-python3 scripts/collect_wikisource_ottoman_ukraine.py \
-  --start 5 \
-  --end 71 \
-  --out data/postcorrection/raw/arabic_turkic_clean_text.txt \
-  --sources data/postcorrection/raw/SOURCES.md
+- [`docs/nlp_final_revision/tables/final_metrics.csv`](docs/nlp_final_revision/tables/final_metrics.csv)
+- [`docs/nlp_final_revision/tables/wer_vs_no_space_cer_dependency.csv`](docs/nlp_final_revision/tables/wer_vs_no_space_cer_dependency.csv)
+- [`docs/nlp_final_revision/tables/whitespace_sanity_summary_by_word_count_group.csv`](docs/nlp_final_revision/tables/whitespace_sanity_summary_by_word_count_group.csv)
+- [`docs/nlp_final_revision/analysis/whitespace_sanity.md`](docs/nlp_final_revision/analysis/whitespace_sanity.md)
+- [`docs/nlp_final_revision/samples/best_examples.md`](docs/nlp_final_revision/samples/best_examples.md)
+- [`docs/nlp_final_revision/samples/worst_examples.md`](docs/nlp_final_revision/samples/worst_examples.md)
+
+## Data files
+
+Raw collected corpus:
+
+```text
+data/postcorrection/raw/arabic_turkic_clean_text.txt
+data/postcorrection/raw/SOURCES.md
 ```
 
-Dataset construction:
+Processed benchmark:
+
+```text
+data/postcorrection/processed/train.csv
+data/postcorrection/processed/valid.csv
+data/postcorrection/processed/test.csv
+data/postcorrection/processed/dataset_stats.csv
+```
+
+## Key commands
+
+Install post-correction dependencies:
+
+```bash
+python3 -m pip install -r requirements-postcorrection.txt
+```
+
+Build the synthetic dataset:
 
 ```bash
 python3 -m src.postcorrection.make_dataset \
@@ -133,7 +140,7 @@ python3 -m src.postcorrection.make_dataset \
   --seed 42
 ```
 
-Baseline evaluation:
+Run baseline evaluation:
 
 ```bash
 python3 -m src.postcorrection.run_baselines \
@@ -142,12 +149,7 @@ python3 -m src.postcorrection.run_baselines \
   --metrics outputs/postcorrection/baseline_metrics.csv
 ```
 
-ByT5 prediction evaluation artifacts:
-
-- `outputs/postcorrection/byt5_arabic_turkic_512_2ep_predictions.csv`
-- `outputs/postcorrection/byt5_arabic_turkic_512_2ep_metrics.csv`
-
-Error analysis:
+Run error analysis:
 
 ```bash
 python3 scripts/postcorrection_error_analysis.py \
@@ -155,26 +157,40 @@ python3 scripts/postcorrection_error_analysis.py \
   --out_dir outputs/postcorrection/error_analysis
 ```
 
-## Important limitations
+Run whitespace sanity check:
 
-This is a pilot experiment, not a final benchmark.
+```bash
+python3 scripts/postcorrection_whitespace_sanity.py
+```
+
+## Limitations
 
 Current limitations:
 
 - the corpus is small;
-- the current pilot uses one main source;
-- OCR-like errors are synthetic;
-- evaluation does not yet include manual linguistic validation;
-- real OCR/HTR outputs should be added for a stronger benchmark.
+- the current benchmark uses one main source;
+- the noise is synthetic;
+- the noise generator is not based on an empirical OCR/HTR confusion matrix;
+- there is no manually validated real-OCR/HTR subset yet;
+- automatic metrics do not fully capture historical-linguistic validity;
+- model predictions can sometimes be worse than the noisy input.
 
-## Reproducibility notes
+## Next steps
 
-The repository stores code, datasets, metrics, predictions, and analysis files for the pilot. Model weights are not stored in git.
+The most important next steps are:
 
-The general CI checks linting, formatting, tests, and the earlier OCR/HTR sanity pipeline. The post-correction pipeline is documented and reproducible, but it is not yet fully integrated into CI.
+1. Update repository documentation and presentation layer.
+2. Run robustness checks with alternative synthetic noise settings.
+3. Analyze worst cases and add a conservative fallback rule.
+4. Build a small real-OCR/HTR sanity subset.
+5. Prepare a short workshop/conference-style paper.
+
+A safe project claim is:
+
+> We present a reproducible pilot benchmark for line-level OCR post-correction of Arabic-script Turkic historical text under controlled synthetic OCR-like noise. ByT5-small outperforms identity, rule-based normalization, and a train-derived character-confusion baseline on this benchmark. However, the results should be interpreted as controlled pilot evidence, not as proof of practical performance on real OCR/HTR outputs.
 
 ## License
 
-Code: MIT (see `LICENSE`).
+Code: MIT, see [`LICENSE`](LICENSE).
 
-Data: depends on source permissions. The current post-correction pilot uses text collected from Wikisource; attribution and source notes are stored in `data/postcorrection/raw/SOURCES.md`.
+Data: source-dependent. The current post-correction pilot uses text collected from Wikisource; attribution and source notes are stored in [`data/postcorrection/raw/SOURCES.md`](data/postcorrection/raw/SOURCES.md).
