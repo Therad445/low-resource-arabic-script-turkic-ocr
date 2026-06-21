@@ -10,8 +10,17 @@ OUT = Path("docs/nlp_final_revision/tables/real_ocr_sanity_metrics.csv")
 
 
 BIDI_CONTROLS = {
-    "\u200e", "\u200f", "\u202a", "\u202b", "\u202c", "\u202d", "\u202e",
-    "\u2066", "\u2067", "\u2068", "\u2069",
+    "\u200e",
+    "\u200f",
+    "\u202a",
+    "\u202b",
+    "\u202c",
+    "\u202d",
+    "\u202e",
+    "\u2066",
+    "\u2067",
+    "\u2068",
+    "\u2069",
 }
 
 
@@ -27,11 +36,13 @@ def levenshtein(a: list[str], b: list[str]) -> int:
     for i, ca in enumerate(a, 1):
         cur = [i]
         for j, cb in enumerate(b, 1):
-            cur.append(min(
-                prev[j] + 1,
-                cur[j - 1] + 1,
-                prev[j - 1] + (ca != cb),
-            ))
+            cur.append(
+                min(
+                    prev[j] + 1,
+                    cur[j - 1] + 1,
+                    prev[j - 1] + (ca != cb),
+                )
+            )
         prev = cur
     return prev[-1]
 
@@ -84,13 +95,16 @@ def main() -> None:
         writer.writeheader()
 
         for engine, items in sorted(grouped.items()):
-            writer.writerow({
-                "method": f"Real OCR identity ({engine})",
-                "CER": sum(cer(r["ocr_text"], r["clean_text"]) for r in items) / len(items),
-                "WER": sum(wer(r["ocr_text"], r["clean_text"]) for r in items) / len(items),
-                "NoSpaceCER": sum(nospace_cer(r["ocr_text"], r["clean_text"]) for r in items) / len(items),
-                "N": len(items),
-            })
+            writer.writerow(
+                {
+                    "method": f"Real OCR identity ({engine})",
+                    "CER": sum(cer(r["ocr_text"], r["clean_text"]) for r in items) / len(items),
+                    "WER": sum(wer(r["ocr_text"], r["clean_text"]) for r in items) / len(items),
+                    "NoSpaceCER": sum(nospace_cer(r["ocr_text"], r["clean_text"]) for r in items)
+                    / len(items),
+                    "N": len(items),
+                }
+            )
 
     print(f"Wrote {OUT}")
 
