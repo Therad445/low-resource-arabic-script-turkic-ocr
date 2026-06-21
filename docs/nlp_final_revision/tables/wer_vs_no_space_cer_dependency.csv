@@ -1,0 +1,5 @@
+dependency_case,N,share
+WER improved + no-space CER improved,601,0.75125
+WER improved only,76,0.095
+neither improved,69,0.08625
+no-space CER improved only,54,0.0675
