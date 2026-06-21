@@ -5,7 +5,6 @@ import unicodedata
 from collections import defaultdict
 from pathlib import Path
 
-
 INPUT = Path("data/postcorrection/real_sanity/real_ocr_sanity.csv")
 OUT = Path("docs/nlp_final_revision/tables/real_ocr_sanity_metrics.csv")
 
