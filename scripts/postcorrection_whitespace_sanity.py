@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
 import pandas as pd
-
 
 PREDICTIONS_PATH = Path("outputs/postcorrection/byt5_arabic_turkic_512_2ep_predictions.csv")
 OUT_DIR = Path("outputs/postcorrection/whitespace_sanity")
@@ -114,9 +113,7 @@ def add_per_example_metrics(df: pd.DataFrame) -> pd.DataFrame:
                 "identity_no_space_cer": safe_rate(
                     identity_no_space_char_dist, clean_no_space_chars
                 ),
-                "byt5_no_space_cer": safe_rate(
-                    byt5_no_space_char_dist, clean_no_space_chars
-                ),
+                "byt5_no_space_cer": safe_rate(byt5_no_space_char_dist, clean_no_space_chars),
             }
         )
 
@@ -124,17 +121,13 @@ def add_per_example_metrics(df: pd.DataFrame) -> pd.DataFrame:
 
     out["cer_improvement"] = out["identity_cer"] - out["byt5_cer"]
     out["wer_improvement"] = out["identity_wer"] - out["byt5_wer"]
-    out["no_space_cer_improvement"] = (
-        out["identity_no_space_cer"] - out["byt5_no_space_cer"]
-    )
+    out["no_space_cer_improvement"] = out["identity_no_space_cer"] - out["byt5_no_space_cer"]
 
     out["cer_improved"] = out["cer_improvement"] > 0
     out["wer_improved"] = out["wer_improvement"] > 0
     out["no_space_cer_improved"] = out["no_space_cer_improvement"] > 0
 
-    out["wer_improved_but_no_space_not"] = (
-        out["wer_improved"] & ~out["no_space_cer_improved"]
-    )
+    out["wer_improved_but_no_space_not"] = out["wer_improved"] & ~out["no_space_cer_improved"]
 
     return out
 
@@ -152,12 +145,8 @@ def summarize_group(name: str, g: pd.DataFrame, total_n: int) -> dict[str, objec
     identity_wer = corpus_rate(g, "identity_word_dist", "clean_words")
     byt5_wer = corpus_rate(g, "byt5_word_dist", "clean_words")
 
-    identity_no_space_cer = corpus_rate(
-        g, "identity_no_space_char_dist", "clean_no_space_chars"
-    )
-    byt5_no_space_cer = corpus_rate(
-        g, "byt5_no_space_char_dist", "clean_no_space_chars"
-    )
+    identity_no_space_cer = corpus_rate(g, "identity_no_space_char_dist", "clean_no_space_chars")
+    byt5_no_space_cer = corpus_rate(g, "byt5_no_space_char_dist", "clean_no_space_chars")
 
     return {
         "group": name,
@@ -176,9 +165,7 @@ def summarize_group(name: str, g: pd.DataFrame, total_n: int) -> dict[str, objec
         "CER_improved_share": g["cer_improved"].mean(),
         "WER_improved_share": g["wer_improved"].mean(),
         "no_space_CER_improved_share": g["no_space_cer_improved"].mean(),
-        "WER_improved_but_no_space_not_share": g[
-            "wer_improved_but_no_space_not"
-        ].mean(),
+        "WER_improved_but_no_space_not_share": g["wer_improved_but_no_space_not"].mean(),
     }
 
 
@@ -268,9 +255,7 @@ def main() -> None:
             "prediction",
             "clean",
         ]
-    ].head(50).to_csv(
-        OUT_DIR / "examples_wer_improved_but_no_space_not.csv", index=False
-    )
+    ].head(50).to_csv(OUT_DIR / "examples_wer_improved_but_no_space_not.csv", index=False)
 
     pd.set_option("display.max_columns", 50)
     pd.set_option("display.width", 220)
