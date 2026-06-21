@@ -35,3 +35,12 @@ Most drafting, polishing, source grounding, methodology, results, limitations, a
 - [ ] Read the abstract, introduction, section conclusions, and final conclusion aloud.
 - [ ] Check that the work is presented as a pilot post-correction study, not as a finished OCR/HTR system.
 - [ ] Check that all strong claims are supported by metrics or explicitly limited as pilot findings.
+
+## Critical sanity checks after synthetic benchmark criticism
+
+- [ ] Проверить, какая часть WER improvement связана с ошибками пробелов и границ слов.
+- [ ] Посчитать no-space CER для noisy input и ByT5 prediction.
+- [ ] Разделить test examples на группы `word_count(noisy) == word_count(clean)` и `word_count(noisy) != word_count(clean)` и сравнить CER/WER improvement.
+- [ ] Проверить robustness на alternative synthetic noise: другие вероятности шума, меньше whitespace noise, больше substitution/deletion noise.
+- [ ] Добавить небольшой real-OCR/HTR sanity check, если появятся реальные OCR-выходы и ручной clean reference.
+- [ ] Не интерпретировать WER improvement как доказательство качества на real OCR без отдельной проверки.
