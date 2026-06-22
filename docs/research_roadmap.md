@@ -1,149 +1,203 @@
 # Research Roadmap
 
-This document lists the next steps required to move the project from a strong course/research pilot toward a workshop or conference-style paper.
+This roadmap summarizes how to move the project from the current course/research pilot toward a stronger workshop paper, master thesis, or benchmark/resource paper.
 
-## Current State
+For the detailed long-term plan, see [`docs/future_work.md`](future_work.md).
 
-The project currently has:
+## Current state
 
-- a reproducible synthetic OCR post-correction benchmark;
+The repository currently contains:
+
+- a reproducible synthetic OCR-like post-correction benchmark;
 - identity, rule-based, train-derived character-confusion and ByT5-small baselines;
-- aggregate metrics;
-- per-example error analysis;
-- whitespace sanity check;
-- final HSE course paper DOCX;
-- supervisor update.
+- aggregate metrics on the synthetic test split;
+- whitespace and no-space sanity analysis;
+- synthetic robustness analysis;
+- worst-case and conservative fallback analysis;
+- a small real-OCR sanity subset;
+- Tesseract Arabic-only real-OCR baseline;
+- ByT5 synthetic-to-real transfer evaluation;
+- qualitative examples for improved, unchanged and worsened real-OCR lines;
+- scripts, tables and analysis documents;
+- CI checks for the repository.
 
-The current result is a controlled pilot result, not a final real-OCR/HTR evaluation.
+The current result is a post-correction pilot, not a full OCR/HTR system.
 
-## Priority 1: Repository Presentation
+## Safe project claim
 
-Goal: make the repository understandable in 2 minutes.
+> We present a reproducible pilot benchmark for line-level OCR post-correction of Arabic-script Turkic historical text. The project evaluates synthetic OCR-like noise, simple and neural baselines, robustness checks, conservative fallback behavior, and a small real-OCR sanity subset. ByT5-small shows partial transfer to real OCR output, but character-level correction remains limited.
 
-Tasks:
+## Claims to avoid
 
-- [x] Update README with current results and limitations.
-- [x] Update DATASET_CARD.
-- [x] Update MODEL_CARD.
-- [x] Add supervisor update.
-- [x] Add research roadmap.
-- [ ] Check all links from README.
-- [ ] Check CI after documentation updates.
+Do not claim:
 
-## Priority 2: Robustness to Synthetic Noise
+- global OCR or OCR post-correction state of the art;
+- solved Arabic-script Turkic OCR/HTR;
+- robust production-ready real-OCR correction;
+- validated performance on large real archive collections;
+- final benchmark quality for the current 90-line real-OCR subset.
 
-Goal: test whether the result depends too strongly on the current synthetic-noise distribution.
+## Completed milestones
 
-Tasks:
+- [x] Synthetic post-correction benchmark.
+- [x] Identity baseline.
+- [x] Rule-based baseline.
+- [x] Train-derived char-confusion baseline.
+- [x] ByT5-small post-correction model.
+- [x] Synthetic test metrics.
+- [x] Whitespace / NoSpaceCER sanity check.
+- [x] Synthetic noise robustness checks.
+- [x] Worst-case analysis and conservative fallback.
+- [x] Real-OCR sanity subset.
+- [x] Tesseract Arabic-only OCR baseline.
+- [x] ByT5 evaluation on real OCR output.
+- [x] Real-OCR qualitative examples.
+- [x] Real-OCR transfer analysis.
+- [x] CI green after experiment and documentation updates.
 
-- [ ] Add a reduced-whitespace synthetic noise configuration.
-- [ ] Add a no-whitespace or near-no-whitespace synthetic noise configuration.
-- [ ] Add an alternative random seed.
-- [ ] Recompute identity, char-confusion baseline and ByT5 evaluation where feasible.
-- [ ] Compare WER, CER and no-space CER across settings.
-- [ ] Document whether ByT5 remains better than baselines.
+## Priority 0: Course-project packaging
 
-Expected output:
-
-```text
-docs/nlp_final_revision/analysis/synthetic_noise_robustness.md
-docs/nlp_final_revision/tables/synthetic_noise_robustness_summary.csv
-```
-
-## Priority 3: Worst-Case Analysis and Fallback
-
-Goal: understand when the model is unsafe.
-
-Tasks:
-
-- [ ] Identify examples where prediction is much longer than clean/noisy.
-- [ ] Identify examples where ByT5 worsens CER.
-- [ ] Identify examples where ByT5 worsens WER.
-- [ ] Inspect repeated-fragment generation.
-- [ ] Test a conservative fallback rule:
-  - if prediction is too long;
-  - if prediction has abnormal repetition;
-  - if prediction changes word count too aggressively;
-  - then return noisy input.
-- [ ] Compare raw ByT5 vs ByT5+fallback.
-
-Expected output:
-
-```text
-docs/nlp_final_revision/analysis/worst_case_analysis.md
-docs/nlp_final_revision/tables/fallback_metrics.csv
-```
-
-## Priority 4: Real OCR/HTR Sanity Subset
-
-Goal: add external validity beyond synthetic noise.
+Goal: finish the current HSE course-project version.
 
 Tasks:
 
-- [ ] Find 10–30 real page or line-level samples.
-- [ ] Obtain real OCR/HTR output.
-- [ ] Create manually checked clean reference.
-- [ ] Evaluate identity OCR output.
-- [ ] Evaluate ByT5 post-correction.
-- [ ] Compare synthetic vs real error patterns.
+- [ ] Update README with real-OCR sanity results.
+- [ ] Link `docs/future_work.md` from README.
+- [ ] Update course-paper text with final real-OCR results.
+- [ ] Add real-OCR result table to the presentation.
+- [ ] Add qualitative examples to slides or appendix.
+- [ ] Prepare a 7-8 minute defense script.
+- [ ] Send supervisor a compact update.
+- [ ] Prepare title page, review and anti-plagiarism package.
 
-Expected output:
+## Priority 1: Clean real benchmark
 
-```text
-data/postcorrection/real_sanity/
-docs/nlp_final_revision/analysis/real_ocr_sanity.md
-docs/nlp_final_revision/tables/real_ocr_sanity_metrics.csv
-```
+Goal: replace the current sanity-level real-OCR subset with a cleaner line-level benchmark.
 
-## Priority 5: Paper Draft
+Tasks:
 
-Goal: prepare a short workshop/conference-style paper.
+- [ ] Verify existing 90 real-OCR line pairs.
+- [ ] Mark `alignment_quality`: good / suspicious / bad.
+- [ ] Remove bad-alignment pairs from the main benchmark.
+- [ ] Expand to 300-500 verified lines.
+- [ ] Later expand to 1000+ verified lines.
+- [ ] Add domain-expert validation if possible.
+- [ ] Document transcription guidelines.
 
-Safe framing:
+## Priority 2: Line crops and structured annotations
 
-> A reproducible pilot benchmark for line-level OCR post-correction of Arabic-script Turkic historical texts under controlled synthetic OCR-like noise.
+Goal: support real OCR/HTR evaluation, not only text-only post-correction.
 
-Claims to avoid:
+Tasks:
 
-- global OCR post-correction state of the art;
-- solved Arabic-script Turkic OCR;
-- validated performance on real archive scans;
-- production-ready automatic transcription.
+- [ ] Create line crops for selected pages.
+- [ ] Link each line crop to `clean_text` and `ocr_text`.
+- [ ] Preserve page ID, line ID and reading order.
+- [ ] Export or support PAGE XML, hOCR or ALTO where feasible.
+- [ ] Store annotation guidelines.
 
-Paper structure:
+## Priority 3: OCR engine baselines
 
-1. Introduction.
-2. Related work.
-3. Dataset and synthetic-noise protocol.
-4. Baselines and ByT5-small.
-5. Results.
-6. Whitespace sanity check.
-7. Limitations.
-8. Real-OCR sanity subset, if ready.
-9. Conclusion.
+Goal: compare post-correction against stronger OCR pipelines.
 
-Expected output:
+Tasks:
 
-```text
-paper/workshop_draft.md
-paper/tables/
-paper/figures/
-```
+- [ ] Keep Tesseract Arabic-only as a baseline.
+- [ ] Compare Tesseract `psm6` vs `psm7` on line crops.
+- [ ] Add Kraken / eScriptorium OCR baseline.
+- [ ] If sufficient line-level ground truth exists, fine-tune a small Kraken model.
+- [ ] Evaluate OCR-only and OCR + post-correction.
 
-## Estimated Remaining Work
+## Priority 4: Real-error-aware synthetic noise
 
-Approximate remaining effort:
+Goal: improve synthetic-to-real transfer.
 
-| Goal | Hours |
+Tasks:
+
+- [ ] Build real OCR confusion statistics from verified pairs.
+- [ ] Model character substitutions, insertions and deletions.
+- [ ] Model whitespace, punctuation and digit errors.
+- [ ] Add Arabic-script glyph-similarity substitutions.
+- [ ] Add RoundTripOCR-style generation:
+  - clean line;
+  - render as image;
+  - degrade image;
+  - run OCR;
+  - use OCR output as noisy input.
+- [ ] Compare generic synthetic noise vs real-error-aware synthetic noise.
+
+## Priority 5: Model comparison
+
+Goal: make ByT5 one strong baseline among several methods.
+
+Tasks:
+
+- [ ] Keep identity, rule-based and char-confusion baselines.
+- [ ] Keep ByT5-small as the main byte-level baseline.
+- [ ] Add mT5-small as a multilingual subword baseline.
+- [ ] Try ByT5-base if compute and data allow.
+- [ ] Train ByT5-small on real-error-aware synthetic noise.
+- [ ] Tune conservative fallback on a real dev set.
+- [ ] Optionally test an LLM/multimodal LLM upper-bound on a small manually checked sample.
+
+## Priority 6: Error taxonomy and diagnostics
+
+Goal: explain what the models do and fail to do.
+
+Tasks:
+
+- [ ] Categorize errors:
+  - whitespace;
+  - punctuation;
+  - glyph substitutions;
+  - missing or extra dots;
+  - digit errors;
+  - insertions and deletions;
+  - hallucinations;
+  - alignment errors.
+- [ ] Report line improved / unchanged / worsened.
+- [ ] Report page-level and engine-level breakdowns.
+- [ ] Report good-alignment-only metrics.
+- [ ] Add qualitative examples for each important error category.
+
+## Priority 7: Paper / thesis trajectory
+
+### Workshop or short paper
+
+Minimum target:
+
+- 300-500 verified real lines;
+- clean line-level alignment;
+- Tesseract and at least one stronger OCR baseline or configuration;
+- ByT5-small and simple baselines;
+- real-error-aware synthetic noise ablation;
+- error taxonomy and qualitative analysis.
+
+### Master thesis
+
+Target:
+
+> Benchmark and methods for OCR and post-OCR correction of Arabic-script Tatar / Turkic historical printed texts.
+
+Expected components:
+
+- verified real benchmark;
+- line crops;
+- OCR engine comparison;
+- post-correction model comparison;
+- real-error-aware synthetic data;
+- domain-expert validation;
+- reproducible dataset and code release.
+
+## Estimated effort
+
+| Goal | Approximate effort |
 |---|---:|
-| Repository presentation | 5–10 |
-| Synthetic robustness | 20–40 |
-| Worst-case analysis + fallback | 10–20 |
-| Real-OCR sanity subset | 20–60 |
-| Paper draft | 30–60 |
-
-Minimum to show supervisor confidently: 10–20 hours.
-
-Minimum for stronger paper trajectory: 60–120 hours.
-
-Stronger submission-ready version: 100–180 hours.
+| Course-project packaging | 10-20 h |
+| Clean 300-500 line real benchmark | 40-100 h |
+| Line crops and structured annotations | 30-80 h |
+| OCR engine comparison | 30-80 h |
+| Real-error-aware synthetic noise | 40-100 h |
+| Model comparison | 30-80 h |
+| Workshop-style paper | 40-100 h |
+| Master-thesis-level version | 200+ h |
