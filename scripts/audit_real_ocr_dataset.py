@@ -45,7 +45,7 @@ LATIN_RE = re.compile(r"[A-Za-z]")
 CYRILLIC_RE = re.compile(r"[\u0400-\u04FF]")
 DIGIT_RE = re.compile(r"[0-9\u0660-\u0669\u06F0-\u06F9]")
 BIDI_CONTROL_RE = re.compile(r"[\u200E\u200F\u202A-\u202E\u2066-\u2069]")
-REPLACEMENT_RE = re.compile("\uFFFD")
+REPLACEMENT_RE = re.compile("\ufffd")
 
 
 TEXT_COL_CANDIDATES = {
@@ -163,7 +163,9 @@ def count_pattern(pattern: re.Pattern[str], text: str) -> int:
 
 def control_count(text: str) -> int:
     total = count_pattern(BIDI_CONTROL_RE, text)
-    total += sum(1 for ch in text if unicodedata.category(ch).startswith("C") and ch not in "\n\t\r")
+    total += sum(
+        1 for ch in text if unicodedata.category(ch).startswith("C") and ch not in "\n\t\r"
+    )
     return total
 
 
@@ -187,7 +189,7 @@ def median(values: Iterable[float]) -> float:
 def pct(n: int, d: int) -> str:
     if d == 0:
         return "0.0%"
-    return f"{100*n/d:.1f}%"
+    return f"{100 * n / d:.1f}%"
 
 
 def analyze(args: argparse.Namespace) -> None:
@@ -215,7 +217,9 @@ def analyze(args: argparse.Namespace) -> None:
     line_col = args.line_col or pick_col(all_fields, TEXT_COL_CANDIDATES["line_id"])
     batch_col = args.batch_col or pick_col(all_fields, TEXT_COL_CANDIDATES["batch_id"])
     align_col = args.alignment_col or pick_col(all_fields, TEXT_COL_CANDIDATES["alignment_quality"])
-    ver_col = args.verification_col or pick_col(all_fields, TEXT_COL_CANDIDATES["verification_level"])
+    ver_col = args.verification_col or pick_col(
+        all_fields, TEXT_COL_CANDIDATES["verification_level"]
+    )
 
     if not ocr_col:
         raise SystemExit("Could not find OCR/noisy text column. Pass --ocr-col.")
@@ -265,7 +269,9 @@ def analyze(args: argparse.Namespace) -> None:
         if len_ocr and len_ocr < args.min_ocr_chars:
             flags.append("very_short_ocr")
             priority += 2
-        if not math.isnan(len_ratio) and (len_ratio < args.min_len_ratio or len_ratio > args.max_len_ratio):
+        if not math.isnan(len_ratio) and (
+            len_ratio < args.min_len_ratio or len_ratio > args.max_len_ratio
+        ):
             flags.append("length_ratio_outlier")
             priority += 6
         if not math.isnan(c) and c > args.high_cer:
@@ -345,7 +351,9 @@ def analyze(args: argparse.Namespace) -> None:
     write_csv(out / "suspicious_rows.csv", suspicious_rows, metric_fields)
     write_csv(out / "unicode_issues.csv", unicode_rows, metric_fields)
     write_csv(out / "duplicates.csv", duplicate_rows, metric_fields)
-    priority_rows = sorted(suspicious_rows, key=lambda r: safe_float(r["_review_priority"]), reverse=True)
+    priority_rows = sorted(
+        suspicious_rows, key=lambda r: safe_float(r["_review_priority"]), reverse=True
+    )
     write_csv(out / "priority_review.csv", priority_rows, metric_fields)
 
     def group_summary(group_key: str) -> list[dict[str, Any]]:
@@ -356,20 +364,24 @@ def analyze(args: argparse.Namespace) -> None:
         for key, items in sorted(groups.items()):
             total = len(items)
             suspicious = sum(1 for r in items if r["_flags"])
-            rows.append({
-                group_key: key,
-                "n": total,
-                "suspicious_n": suspicious,
-                "suspicious_pct": pct(suspicious, total),
-                "mean_cer": f"{mean(safe_float(r['_cer_ocr_vs_clean']) for r in items):.6f}",
-                "median_cer": f"{median(safe_float(r['_cer_ocr_vs_clean']) for r in items):.6f}",
-                "mean_wer": f"{mean(safe_float(r['_wer_ocr_vs_clean']) for r in items):.6f}",
-                "mean_no_space_cer": f"{mean(safe_float(r['_no_space_cer_ocr_vs_clean']) for r in items):.6f}",
-                "missing_clean": sum(1 for r in items if "missing_clean_text" in r["_flags"]),
-                "high_cer": sum(1 for r in items if "high_cer_ocr_vs_clean" in r["_flags"]),
-                "length_outliers": sum(1 for r in items if "length_ratio_outlier" in r["_flags"]),
-                "unicode_issues": sum(1 for r in items if "unicode_" in r["_flags"]),
-            })
+            rows.append(
+                {
+                    group_key: key,
+                    "n": total,
+                    "suspicious_n": suspicious,
+                    "suspicious_pct": pct(suspicious, total),
+                    "mean_cer": f"{mean(safe_float(r['_cer_ocr_vs_clean']) for r in items):.6f}",
+                    "median_cer": f"{median(safe_float(r['_cer_ocr_vs_clean']) for r in items):.6f}",
+                    "mean_wer": f"{mean(safe_float(r['_wer_ocr_vs_clean']) for r in items):.6f}",
+                    "mean_no_space_cer": f"{mean(safe_float(r['_no_space_cer_ocr_vs_clean']) for r in items):.6f}",
+                    "missing_clean": sum(1 for r in items if "missing_clean_text" in r["_flags"]),
+                    "high_cer": sum(1 for r in items if "high_cer_ocr_vs_clean" in r["_flags"]),
+                    "length_outliers": sum(
+                        1 for r in items if "length_ratio_outlier" in r["_flags"]
+                    ),
+                    "unicode_issues": sum(1 for r in items if "unicode_" in r["_flags"]),
+                }
+            )
         return rows
 
     source_summary = group_summary("_source_id")
@@ -407,7 +419,9 @@ def analyze(args: argparse.Namespace) -> None:
     report.append(f"- verification level: `{ver_col or 'not found'}`\n")
     report.append("\n## Global summary\n")
     report.append(f"- Rows: **{total}**\n")
-    report.append(f"- Suspicious rows: **{len(suspicious_rows)}** ({pct(len(suspicious_rows), total)})\n")
+    report.append(
+        f"- Suspicious rows: **{len(suspicious_rows)}** ({pct(len(suspicious_rows), total)})\n"
+    )
     report.append(f"- Mean CER OCR vs clean: **{mean(cer_values):.6f}**\n")
     report.append(f"- Median CER OCR vs clean: **{median(cer_values):.6f}**\n")
     report.append(f"- Mean WER OCR vs clean: **{mean(wer_values):.6f}**\n")
@@ -421,9 +435,13 @@ def analyze(args: argparse.Namespace) -> None:
 
     report.append("\n## How to interpret this report\n")
     report.append("- High CER/WER is not automatically an error: real OCR can be very bad.\n")
-    report.append("- `length_ratio_outlier`, missing text, Unicode replacement characters and duplicate IDs should be checked first.\n")
+    report.append(
+        "- `length_ratio_outlier`, missing text, Unicode replacement characters and duplicate IDs should be checked first.\n"
+    )
     report.append("- Rows in `priority_review.csv` are sorted by estimated review urgency.\n")
-    report.append("- Only rows manually checked as `alignment_quality=good` should enter gold dev/test.\n")
+    report.append(
+        "- Only rows manually checked as `alignment_quality=good` should enter gold dev/test.\n"
+    )
 
     (out / "audit_report.md").write_text("".join(report), encoding="utf-8")
     print(f"Wrote audit report: {out / 'audit_report.md'}")
