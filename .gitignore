@@ -55,3 +55,7 @@ _incoming/
 models/
 *.safetensors
 *.bin
+
+# Local OCR dataset workspaces; may contain source texts, page images and downloaded HTML.
+data/real_ocr_dataset_v1/
+outputs/real_ocr_audit/
