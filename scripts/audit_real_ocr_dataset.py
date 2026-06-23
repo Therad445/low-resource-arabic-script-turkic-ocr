@@ -36,9 +36,9 @@ import re
 import statistics
 import unicodedata
 from collections import Counter, defaultdict
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
-
+from typing import Any
 
 ARABIC_RE = re.compile(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]")
 LATIN_RE = re.compile(r"[A-Za-z]")
@@ -170,7 +170,7 @@ def control_count(text: str) -> int:
 def safe_float(v: Any) -> float:
     try:
         return float(v)
-    except Exception:
+    except (TypeError, ValueError):
         return math.nan
 
 
