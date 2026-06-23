@@ -2,7 +2,7 @@
 
 ## Current status
 
-The project has been brought to a reproducible pilot-study state.
+The project has been brought to a reproducible final course-project state.
 
 Repository: https://github.com/Therad445/low-resource-arabic-script-turkic-ocr
 
@@ -15,12 +15,17 @@ The current version includes:
 - rule-based normalizer baseline;
 - train-derived character-confusion baseline;
 - ByT5-small 512 / 2 epochs model;
-- CER, WER, ExactMatch evaluation;
+- CER, WER, NoSpaceCER and ExactMatch evaluation;
 - per-example error analysis;
 - whitespace sanity check for WER interpretation;
-- final Russian HSE course paper DOCX.
+- synthetic-noise robustness and fallback analysis;
+- a small real-OCR sanity subset;
+- Arabic-only Tesseract real-OCR baseline;
+- ByT5 synthetic-to-real transfer evaluation;
+- final Russian HSE course paper DOCX;
+- defense slides, PDF fallback and speaker notes.
 
-## Main experimental results
+## Main synthetic benchmark results
 
 Final comparison on the synthetic test set:
 
@@ -33,45 +38,76 @@ Final comparison on the synthetic test set:
 
 ByT5-small gives the best result among the evaluated methods on the controlled synthetic benchmark.
 
+## Real-OCR sanity result
+
+A small real-OCR sanity check was added to test synthetic-to-real transfer.
+
+Setup:
+
+- 90 line-level real-OCR samples;
+- 8 source pages;
+- Arabic-only Tesseract baseline: `tesseract_ara_psm6`;
+- same synthetic-trained ByT5 model;
+- no real-domain fine-tuning.
+
+| Method | CER | WER | NoSpaceCER | N |
+|---|---:|---:|---:|---:|
+| Real OCR identity (`tesseract_ara_psm6`) | 0.4508 | 1.0888 | 0.4468 | 90 |
+| Synthetic-trained ByT5 on real OCR | 0.4361 | 0.9660 | 0.4454 | 90 |
+
+Line-level CER behavior:
+
+| Category | Count |
+|---|---:|
+| CER improved | 40 |
+| CER unchanged | 33 |
+| CER worsened | 17 |
+
+Interpretation: the model shows partial transfer to real Tesseract OCR output. WER improves more clearly than CER, while NoSpaceCER changes only marginally. Therefore, this should be presented as a sanity-level transfer check, not as a solved real-OCR correction system.
+
 ## Important interpretation
 
 The result should be interpreted cautiously.
 
-This is not a full OCR/HTR system and not a real archive OCR evaluation. The current work evaluates line-level post-correction under controlled synthetic OCR-like noise.
+This is not a full OCR/HTR system and not a production archive OCR evaluation. The current work evaluates line-level post-correction under controlled synthetic OCR-like noise and adds a small real-OCR sanity check.
 
-The large WER reduction is partly amplified by synthetic whitespace / word-boundary noise, but it is not only a whitespace artifact. A separate sanity check shows:
+The large synthetic WER reduction is partly amplified by synthetic whitespace / word-boundary noise, but it is not only a whitespace artifact. A separate sanity check shows:
 
 - raw WER improvement: 0.159354;
 - raw CER improvement: 0.013507;
 - no-space CER improvement: 0.010374;
 - only 9.5% of examples show WER improvement without no-space CER improvement.
 
-Thus, the model improves not only word boundaries but also non-whitespace character-level quality. Still, real OCR/HTR validation is required before making stronger claims.
+Thus, the model improves not only word boundaries but also non-whitespace character-level quality on the synthetic benchmark. On real OCR output, transfer is visible but weaker and unstable.
 
 ## Main limitations
 
-- The corpus is small: 400 clean text blocks.
-- The benchmark uses one main Ottoman-Turkic source.
-- Noise is synthetic, not produced by a real OCR/HTR system.
-- The noise generator is not based on an empirical OCR confusion matrix.
-- There is no manually validated real-OCR subset yet.
+- The corpus is small.
+- The synthetic benchmark uses limited source material.
+- Most training data is synthetic, not real OCR/HTR output.
+- The synthetic noise generator is not based on an empirical OCR confusion matrix.
+- The real-OCR subset is small and should be treated as a sanity check.
+- Some real-OCR line pairs may still contain alignment noise.
 - The current model is a pilot ByT5-small experiment, not a final production model.
 
 ## Next steps
 
 The most important next steps are:
 
-1. Build a small real-OCR/HTR sanity subset:
-   - 10–30 page or line-level samples;
-   - OCR/HTR output;
-   - manually checked clean reference.
+1. Expand the verified real-OCR benchmark:
+   - 300–500 manually checked line-level samples as a near-term target;
+   - line crops or page coordinates;
+   - clean reference and OCR output alignment.
 
-2. Run the same evaluation protocol on real OCR/HTR output.
+2. Compare OCR/HTR engines and configurations:
+   - Tesseract page-level and line-level modes;
+   - Kraken/eScriptorium where feasible;
+   - OCR-specific error profiles.
 
-3. Add an alternative synthetic-noise robustness test:
-   - reduced whitespace noise;
-   - different substitution/deletion probabilities;
-   - evaluation of whether ByT5 remains better than baselines.
+3. Build real-error-aware synthetic noise:
+   - confusion matrix from verified real OCR/reference pairs;
+   - glyph-similarity and spacing error patterns;
+   - better synthetic-to-real transfer.
 
 4. Prepare a short workshop/conference-style paper:
    - frame as a reproducible pilot benchmark;
@@ -82,4 +118,4 @@ The most important next steps are:
 
 A safe formulation is:
 
-> We present a reproducible pilot benchmark for line-level OCR post-correction of Arabic-script Turkic historical text under controlled synthetic OCR-like noise. ByT5-small outperforms identity, rule-based normalization, and a train-derived character-confusion baseline on this benchmark. However, the results should be interpreted as controlled pilot evidence, not as proof of practical performance on real OCR/HTR outputs.
+> We present a reproducible pilot benchmark for line-level OCR post-correction of Arabic-script Turkic historical text. The project includes controlled synthetic OCR-like noise, simple and neural baselines, robustness and fallback analysis, and a small real-OCR sanity evaluation. ByT5-small outperforms the baselines on the synthetic benchmark and shows partial transfer to real Tesseract OCR output, but robust character-level real-OCR correction remains future work.
