@@ -678,6 +678,10 @@ Post-correction является промежуточным этапом. Пос
 
 Практический результат работы — не готовая универсальная OCR-система, а воспроизводимый baseline, набор метрик, документация ограничений и ясная дорожная карта перехода от synthetic benchmark к real-domain adaptation. Для курсового проекта это достаточный и честный результат; для магистерской работы это отправная точка более крупного исследования.
 
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 # Список литературы
 
 1. Vaswani A., Shazeer N., Parmar N., Uszkoreit J., Jones L., Gomez A. N., Kaiser L., Polosukhin I. Attention Is All You Need. 2017. arXiv:1706.03762. URL: https://arxiv.org/abs/1706.03762
