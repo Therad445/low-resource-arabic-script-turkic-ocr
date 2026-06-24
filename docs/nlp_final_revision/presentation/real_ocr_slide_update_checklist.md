@@ -16,7 +16,6 @@ Use this deck instead of older slides that used the line-level sanity subset as 
 ## Avoid saying
 
 - “The model is ready for practical OCR correction.”
-- “We built an Old Tatar/Bashkir dataset.”
 - “ByT5 reliably improves real OCR.”
 - “The result proves direct transfer to real OCR.”
 
