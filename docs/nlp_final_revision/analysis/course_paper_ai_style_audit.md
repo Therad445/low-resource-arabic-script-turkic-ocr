@@ -4,8 +4,8 @@
 
 ## Что убрано или снижено
 
-- Слишком общий тезис про «частичный перенос» заменён на конкретный результат page-level real-OCR benchmark.
-- Старый line-level sanity check на 90 строках больше не подаётся как основной real-OCR результат.
+- Слишком общий тезис про старый line-level вывод заменён на конкретный результат page-level real-OCR benchmark.
+- Старый line-level sanity check на небольшом line-level subset больше не подаётся как основной real-OCR результат.
 - Убрана чрезмерно уверенная интерпретация ByT5 как практически полезного корректора для реального OCR.
 - Добавлено явное различие между synthetic benchmark и real-OCR benchmark.
 - Добавлено уточнение: текущий real source — Ottoman Turkish, а не Old Tatar / Old Bashkir.

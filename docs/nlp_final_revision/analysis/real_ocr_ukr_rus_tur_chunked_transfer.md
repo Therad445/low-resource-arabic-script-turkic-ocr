@@ -49,7 +49,7 @@ Page-level CER status counts:
 
 The synthetic-trained ByT5 model does not reliably transfer to full-page real OCR for the Ottoman Turkish source. It slightly improves WER, but substantially worsens CER and NoSpaceCER. Since character-level accuracy is central for OCR post-correction in Arabic script, the main result is negative or mixed transfer rather than a successful real-OCR improvement.
 
-The strict fallback reduces the damage and improves more pages than the unguarded model, but it still does not outperform raw Tesseract on average. This suggests that robust real-OCR correction requires real-domain adaptation, aligned OCR/reference chunks, and real-error-aware training data.
+The strict fallback reduces the damage and improves more pages than the unguarded model, but it still does not outperform raw Tesseract on average. This suggests that reliable real-OCR correction requires real-domain adaptation, aligned OCR/reference chunks, and real-error-aware training data.
 
 ## Takeaway
 

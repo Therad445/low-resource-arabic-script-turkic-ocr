@@ -87,7 +87,7 @@ Page-level evaluation summary:
 | byt5_chunked | 68 | 0.4564 | 0.4206 | 0.8919 | 0.8579 | 0.4658 |
 | strict_guarded_byt5 | 68 | 0.3828 | 0.3442 | 0.9039 | 0.8605 | 0.3830 |
 
-Interpretation: the synthetic-trained model does not robustly transfer to page-level real OCR. It improves WER slightly but worsens CER and NoSpaceCER. This confirms a synthetic-to-real gap.
+Interpretation: the synthetic-trained model does not reliably transfer to page-level real OCR. It improves WER slightly but worsens CER and NoSpaceCER. This confirms a synthetic-to-real gap.
 
 ## Files
 

@@ -4,7 +4,7 @@ This file summarizes two real-OCR sanity checks used in the project.
 
 ## 1. Earlier line-level sanity subset
 
-The earlier real-OCR sanity subset contained 90 line-level OCR/reference pairs. It was used as a first transfer check after training ByT5 on synthetic OCR-like noise.
+An earlier exploratory line-level real-OCR check was used before the page-level benchmark. It is kept only as historical context.
 
 | Method | CER | WER | NoSpaceCER | N |
 |---|---:|---:|---:|---:|
@@ -19,7 +19,7 @@ Line-level CER behavior:
 | Unchanged | 33 |
 | Worsened | 17 |
 
-This earlier result suggested partial transfer, but the subset was small and line-level.
+This earlier result is not used as the main conclusion, because the subset was small and line-level.
 
 ## 2. New page-level Ottoman Turkish sanity benchmark
 
@@ -47,6 +47,6 @@ Page-level CER behavior:
 
 ## Interpretation
 
-The page-level experiment changes the main interpretation. The synthetic-trained model does not robustly transfer to full-page real OCR. It improves WER slightly but worsens CER and NoSpaceCER. The strict fallback reduces the damage but still does not beat raw Tesseract on average by CER.
+The page-level experiment changes the main interpretation. The synthetic-trained model does not reliably transfer to full-page real OCR. It improves WER slightly but worsens CER and NoSpaceCER. The strict fallback reduces the damage but still does not beat raw Tesseract on average by CER.
 
 This is a useful negative/mixed transfer finding: synthetic OCR-like noise is not enough to model real page-level OCR errors for Ottoman Turkish Arabic-script text. Future work should build aligned real OCR/reference chunks and fine-tune on real-domain errors.

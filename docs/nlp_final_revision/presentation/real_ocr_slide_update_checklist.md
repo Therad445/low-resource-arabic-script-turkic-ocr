@@ -1,6 +1,6 @@
 # Real-OCR slide update checklist
 
-Use this deck instead of older slides that claimed partial real-OCR transfer on 90 line-level samples.
+Use this deck instead of older slides that used the line-level sanity subset as the main real-OCR result.
 
 ## Must say
 
@@ -18,7 +18,7 @@ Use this deck instead of older slides that claimed partial real-OCR transfer on 
 - “The model is ready for practical OCR correction.”
 - “We built an Old Tatar/Bashkir dataset.”
 - “ByT5 reliably improves real OCR.”
-- “The result proves robustness.”
+- “The result proves direct transfer to real OCR.”
 
 ## Safe final sentence
 

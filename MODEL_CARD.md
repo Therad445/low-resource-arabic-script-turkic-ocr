@@ -43,7 +43,7 @@ Main neural configuration:
 | Epochs | 2 |
 | Main evaluation split | synthetic test set |
 | Synthetic test size | 800 noisy-clean pairs |
-| Earlier real-OCR sanity subset | 90 line-level pairs |
+| Earlier exploratory real-OCR sanity subset | small line-level check, not the main real-OCR result |
 | New page-level real-OCR subset | 68 filtered pages |
 | Real OCR engine | `tesseract_ara_psm6` |
 
@@ -111,7 +111,7 @@ Setup:
 
 - OCR engine: Arabic-only Tesseract (`tesseract_ara_psm6`);
 - evaluation unit: line-level OCR/reference pairs;
-- sample size: 90 lines;
+- sample size: small exploratory line-level subset;
 - model: the same ByT5-small model trained on synthetic noise;
 - no real-domain fine-tuning.
 
@@ -131,7 +131,7 @@ Line-level CER behavior:
 | CER worsened | 17 |
 | Total | 90 |
 
-This result suggested partial transfer, but it was based on a small line-level subset.
+This result is kept only as historical context; the page-level benchmark is the main real-OCR result.
 
 ## Page-Level Real-OCR Transfer Evaluation
 
@@ -166,7 +166,7 @@ Interpretation:
 - the synthetic-trained model does not reliably transfer to full-page real OCR;
 - WER improves slightly, but CER and NoSpaceCER become worse;
 - strict fallback reduces damage but still does not outperform raw Tesseract on average by CER;
-- robust real-OCR correction requires real-domain adaptation and aligned OCR/reference chunks.
+- reliable real-OCR correction requires real-domain adaptation and aligned OCR/reference chunks.
 
 ## Risks and Failure Modes
 

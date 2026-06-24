@@ -52,8 +52,6 @@ ByT5-small gives the best result among the evaluated methods on the controlled s
 
 ### Earlier line-level sanity subset
 
-The earlier real-OCR sanity subset contains 90 line-level examples. It is retained as a small transfer check.
-
 | Method | CER ↓ | WER ↓ | NoSpaceCER ↓ | N |
 |---|---:|---:|---:|---:|
 | Real OCR identity (`tesseract_ara_psm6`) | 0.4508 | 1.0888 | 0.4468 | 90 |
@@ -96,7 +94,7 @@ Page-level CER status counts:
 | byt5_chunked | 6 | 0 | 62 |
 | strict_guarded_byt5 | 33 | 3 | 32 |
 
-Interpretation: the synthetic-trained ByT5 model does **not** robustly transfer to full-page real OCR for the Ottoman Turkish source. It slightly improves WER but worsens CER and NoSpaceCER. The strict fallback reduces the damage but still does not outperform raw Tesseract on average by CER. This is a realistic synthetic-to-real gap and motivates real-domain adaptation.
+Interpretation: the synthetic-trained ByT5 model does **not** reliably transfer to full-page real OCR for the Ottoman Turkish source. It slightly improves WER but worsens CER and NoSpaceCER. The strict fallback reduces the damage but still does not outperform raw Tesseract on average by CER. This is a realistic synthetic-to-real gap and motivates real-domain adaptation.
 
 ## Important interpretation
 
@@ -112,7 +110,7 @@ This project does **not** claim:
 
 A safe project claim is:
 
-> We present a reproducible pilot benchmark for OCR post-correction of Arabic-script Turkic historical text. The project includes controlled synthetic OCR-like noise, simple and neural baselines, robustness and fallback analysis, and real-OCR sanity evaluation. ByT5-small improves the controlled synthetic benchmark, but the page-level Ottoman Turkish real-OCR experiment shows that synthetic-only training does not reliably transfer to real full-page OCR without real-domain adaptation.
+> We present a reproducible pilot benchmark for OCR post-correction of Arabic-script Turkic historical text. The project includes controlled synthetic OCR-like noise, simple and neural baselines, sensitivity and fallback analysis, and real-OCR sanity evaluation. ByT5-small improves the controlled synthetic benchmark, but the page-level Ottoman Turkish real-OCR experiment shows that synthetic-only training does not reliably transfer to real full-page OCR without real-domain adaptation.
 
 ## Dataset summary
 
