@@ -281,8 +281,12 @@ def update(text: str) -> str:
     text = replace_exact(text, old_conclusion_p5, NEW_CONCLUSION_P5)
 
     # Light style cleanup: reduce a few generic phrases.
-    text = text.replace("показывает частичный, но ограниченный перенос", "даёт смешанный результат переноса")
-    text = text.replace("является полезным начальным baseline", "может рассматриваться как начальный baseline")
+    text = text.replace(
+        "показывает частичный, но ограниченный перенос", "даёт смешанный результат переноса"
+    )
+    text = text.replace(
+        "является полезным начальным baseline", "может рассматриваться как начальный baseline"
+    )
 
     return text
 
