@@ -830,42 +830,44 @@ CER, WER, NoSpaceCER и ExactMatch дают полезную, но неполн�
 \newpage
 
 # Библиографический список
-1. Vaswani A., Shazeer N., Parmar N., Uszkoreit J., Jones L., Gomez A. N., Kaiser L., Polosukhin I. Attention Is All You Need. 2017. arXiv:1706.03762. URL: https://arxiv.org/abs/1706.03762
 
-2. Raffel C., Shazeer N., Roberts A., Lee K., Narang S., Matena M., Zhou Y., Li W., Liu P. J. Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer. 2019. arXiv:1910.10683. URL: https://arxiv.org/abs/1910.10683
+1. Vaswani A., Shazeer N., Parmar N. et al. Attention Is All You Need [Электронный ресурс]. – 2017. – arXiv:1706.03762. – URL: https://arxiv.org/abs/1706.03762 (дата обращения: 27.06.2026).
 
-3. Xue L., Barua A., Constant N., Al-Rfou R., Narang S., Kale M., Roberts A., Raffel C. ByT5: Towards a token-free future with pre-trained byte-to-byte models. 2021. arXiv:2105.13626. URL: https://arxiv.org/abs/2105.13626
+2. Raffel C., Shazeer N., Roberts A. et al. Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer [Электронный ресурс]. – 2019. – arXiv:1910.10683. – URL: https://arxiv.org/abs/1910.10683 (дата обращения: 27.06.2026).
 
-4. Ramirez-Orta J., Xamena E., Maguitman A., Milios E., Soto A. J. Post-OCR Document Correction with large Ensembles of Character Sequence-to-Sequence Models. 2021. arXiv:2109.06264. URL: https://arxiv.org/abs/2109.06264
+3. Xue L., Barua A., Constant N. et al. ByT5: Towards a token-free future with pre-trained byte-to-byte models [Электронный ресурс]. – 2021. – arXiv:2105.13626. – URL: https://arxiv.org/abs/2105.13626 (дата обращения: 27.06.2026).
 
-5. Hämäläinen M., Hengchen S. From the Paft to the Fiiture: a Fully Automatic NMT and Word Embeddings Method for OCR Post-Correction. 2019. arXiv:1910.05535. URL: https://arxiv.org/abs/1910.05535
+4. Ramirez-Orta J., Xamena E., Maguitman A., Milios E., Soto A. J. Post-OCR Document Correction with large Ensembles of Character Sequence-to-Sequence Models [Электронный ресурс]. – 2021. – arXiv:2109.06264. – URL: https://arxiv.org/abs/2109.06264 (дата обращения: 27.06.2026).
 
-6. Duong Q., Hämäläinen M., Hengchen S. An Unsupervised method for OCR Post-Correction and Spelling Normalisation for Finnish. 2020. arXiv:2011.03502. URL: https://arxiv.org/abs/2011.03502
+5. Hämäläinen M., Hengchen S. From the Paft to the Fiuture: a Fully Automatic NMT and Word Embeddings Method for OCR Post-Correction [Электронный ресурс]. – 2019. – arXiv:1910.05535. – URL: https://arxiv.org/abs/1910.05535 (дата обращения: 27.06.2026).
 
-7. Suissa O., Elmalech A., Zhitomirsky-Geffet M. Optimizing the Neural Network Training for OCR Error Correction of Historical Hebrew Texts. 2023. arXiv:2307.16220. URL: https://arxiv.org/abs/2307.16220
+6. Duong Q., Hämäläinen M., Hengchen S. An Unsupervised method for OCR Post-Correction and Spelling Normalisation for Finnish [Электронный ресурс]. – 2020. – arXiv:2011.03502. – URL: https://arxiv.org/abs/2011.03502 (дата обращения: 27.06.2026).
 
-8. Kanerva J., Ledins C., Käpyaho S., Ginter F. OCR Error Post-Correction with LLMs in Historical Documents: No Free Lunches. 2025. arXiv:2502.01205. URL: https://arxiv.org/abs/2502.01205
+7. Suissa O., Elmalech A., Zhitomirsky-Geffet M. Optimizing the Neural Network Training for OCR Error Correction of Historical Hebrew Texts [Электронный ресурс]. – 2023. – arXiv:2307.16220. – URL: https://arxiv.org/abs/2307.16220 (дата обращения: 27.06.2026).
 
-9. Reul C., Christ D., Hartelt A., Balbach N., Wehner M., Springmann U., Wick C., Grundig C., Büttner A., Puppe F. OCR4all -- An Open-Source Tool Providing a (Semi-)Automatic OCR Workflow for Historical Printings. 2019. arXiv:1909.04032. URL: https://arxiv.org/abs/1909.04032
+8. Kanerva J., Ledins C., Käpyaho S., Ginter F. OCR Error Post-Correction with LLMs in Historical Documents: No Free Lunches [Электронный ресурс]. – 2025. – arXiv:2502.01205. – URL: https://arxiv.org/abs/2502.01205 (дата обращения: 27.06.2026).
 
-10. Springmann U., Reul C., Dipper S., Baiter J. Ground Truth for training OCR engines on historical documents in German Fraktur and Early Modern Latin. 2018. arXiv:1809.05501. URL: https://arxiv.org/abs/1809.05501
+9. Reul C., Christ D., Hartelt A. et al. OCR4all – An Open-Source Tool Providing a (Semi-)Automatic OCR Workflow for Historical Printings [Электронный ресурс]. – 2019. – arXiv:1909.04032. – URL: https://arxiv.org/abs/1909.04032 (дата обращения: 27.06.2026).
 
-11. Kasem M. S., Mahmoud M., Kang H.-S. Advancements and Challenges in Arabic Optical Character Recognition: A Comprehensive Survey. 2023. arXiv:2312.11812. URL: https://arxiv.org/abs/2312.11812
+10. Springmann U., Reul C., Dipper S., Baiter J. Ground Truth for training OCR engines on historical documents in German Fraktur and Early Modern Latin [Электронный ресурс]. – 2018. – arXiv:1809.05501. – URL: https://arxiv.org/abs/1809.05501 (дата обращения: 27.06.2026).
 
-12. Osman H., Zaghw K., Hazem M., Elsehely S. An Efficient Language-Independent Multi-Font OCR for Arabic Script. 2020. arXiv:2009.09115. URL: https://arxiv.org/abs/2009.09115
+11. Kasem M. S., Mahmoud M., Kang H.-S. Advancements and Challenges in Arabic Optical Character Recognition: A Comprehensive Survey [Электронный ресурс]. – 2023. – arXiv:2312.11812. – URL: https://arxiv.org/abs/2312.11812 (дата обращения: 27.06.2026).
 
-13. Kirmizialtin S., Wrisley D. Automated Transcription of Non-Latin Script Periodicals: A Case Study in the Ottoman Turkish Print Archive. 2020. arXiv:2011.01139. URL: https://arxiv.org/abs/2011.01139
+12. Osman H., Zaghw K., Hazem M., Elsehely S. An Efficient Language-Independent Multi-Font OCR for Arabic Script [Электронный ресурс]. – 2020. – arXiv:2009.09115. – URL: https://arxiv.org/abs/2009.09115 (дата обращения: 27.06.2026).
 
-14. Özateş Ş. B., Tıraş T. E., Adak E. E., Doğan B., Karagöz F. B., Genç E. E., Bilgin Taşdemir E. F. Building Foundations for Natural Language Processing of Historical Turkish: Resources and Models. 2025. arXiv:2501.04828. URL: https://arxiv.org/abs/2501.04828
+13. Kirmizialtin S., Wrisley D. Automated Transcription of Non-Latin Script Periodicals: A Case Study in the Ottoman Turkish Print Archive [Электронный ресурс]. – 2020. – arXiv:2011.01139. – URL: https://arxiv.org/abs/2011.01139 (дата обращения: 27.06.2026).
 
-15. Lyu L., Koutraki M., Krickl M., Fetahu B. Neural OCR Post-Hoc Correction of Historical Corpora. 2021. arXiv:2102.00583. URL: https://arxiv.org/abs/2102.00583
+14. Özateş Ş. B., Tıraş T. E., Adak E. E. et al. Building Foundations for Natural Language Processing of Historical Turkish: Resources and Models [Электронный ресурс]. – 2025. – arXiv:2501.04828. – URL: https://arxiv.org/abs/2501.04828 (дата обращения: 27.06.2026).
 
-16. Rijhwani S., Rosenblum D., Anastasopoulos A., Neubig G. Lexically Aware Semi-Supervised Learning for OCR Post-Correction. 2021. arXiv:2111.02622. URL: https://arxiv.org/abs/2111.02622
+15. Lyu L., Koutraki M., Krickl M., Fetahu B. Neural OCR Post-Hoc Correction of Historical Corpora [Электронный ресурс]. – 2021. – arXiv:2102.00583. – URL: https://arxiv.org/abs/2102.00583 (дата обращения: 27.06.2026).
 
-17. Naiman J. P., Cosillo M. G., Williams P. K. G., Goodman A. Large Synthetic Data from the arXiv for OCR Post Correction of Historic Scientific Articles. 2023. arXiv:2309.11549. URL: https://arxiv.org/abs/2309.11549
+16. Rijhwani S., Rosenblum D., Anastasopoulos A., Neubig G. Lexically Aware Semi-Supervised Learning for OCR Post-Correction [Электронный ресурс]. – 2021. – arXiv:2111.02622. – URL: https://arxiv.org/abs/2111.02622 (дата обращения: 27.06.2026).
 
-18. Guan S., Greene D. Advancing Post-OCR Correction: A Comparative Study of Synthetic Data. 2024. arXiv:2408.02253. URL: https://arxiv.org/abs/2408.02253
+17. Naiman J. P., Cosillo M. G., Williams P. K. G., Goodman A. Large Synthetic Data from the arXiv for OCR Post Correction of Historic Scientific Articles [Электронный ресурс]. – 2023. – arXiv:2309.11549. – URL: https://arxiv.org/abs/2309.11549 (дата обращения: 27.06.2026).
 
-19. Kashid H., Bhattacharyya P. RoundTripOCR: A Data Generation Technique for Enhancing Post-OCR Error Correction in Low-Resource Devanagari Languages. 2024. arXiv:2412.15248. URL: https://arxiv.org/abs/2412.15248
+18. Guan S., Greene D. Advancing Post-OCR Correction: A Comparative Study of Synthetic Data [Электронный ресурс]. – 2024. – arXiv:2408.02253. – URL: https://arxiv.org/abs/2408.02253 (дата обращения: 27.06.2026).
 
-20. Li M., Lv T., Chen J., Cui L., Lu Y., Florencio D., Zhang C., Li Z., Wei F. TrOCR: Transformer-based Optical Character Recognition with Pre-trained Models. 2021. arXiv:2109.10282. URL: https://arxiv.org/abs/2109.10282
+19. Kashid H., Bhattacharyya P. RoundTripOCR: A Data Generation Technique for Enhancing Post-OCR Error Correction in Low-Resource Devanagari Languages [Электронный ресурс]. – 2024. – arXiv:2412.15248. – URL: https://arxiv.org/abs/2412.15248 (дата обращения: 27.06.2026).
+
+20. Li M., Lv T., Chen J. et al. TrOCR: Transformer-based Optical Character Recognition with Pre-trained Models [Электронный ресурс]. – 2021. – arXiv:2109.10282. – URL: https://arxiv.org/abs/2109.10282 (дата обращения: 27.06.2026).
+
